@@ -1,0 +1,49 @@
+parameters:
+#    twig.form.engine.class: AppBundle\Form\Twig\TwigRendererEngine
+
+services:
+
+    sparkson.data_exporter.factory:
+        class: Sparkson\DataExporterBundle\Exporter\ExporterFactory
+        arguments:
+            - @sparkson.data_exporter.type_registry
+            - @sparkson.data_exporter.default_column_resolver
+
+    sparkson.data_exporter.type_registry:
+        class: Sparkson\DataExporterBundle\Exporter\TypeRegistry
+
+    sparkson.data_exporter.default_column_resolver:
+        class: Sparkson\DataExporterBundle\Exporter\SimpleTypeRawValueResolver
+
+
+    # Column types
+
+    sparkson.data_exporter.type.string:
+        class: Sparkson\DataExporterBundle\Exporter\Type\StringType
+        tags:
+            -  { name: sparkson.data_exporter.type }
+
+    sparkson.data_exporter.type.number:
+        class: Sparkson\DataExporterBundle\Exporter\Type\NumberType
+        tags:
+            -  { name: sparkson.data_exporter.type }
+
+    sparkson.data_exporter.type.map:
+        class: Sparkson\DataExporterBundle\Exporter\Type\MapType
+        tags:
+            -  { name: sparkson.data_exporter.type }
+
+    sparkson.data_exporter.type.datetime:
+        class: Sparkson\DataExporterBundle\Exporter\Type\DateTimeType
+        tags:
+            -  { name: sparkson.data_exporter.type }
+
+    sparkson.data_exporter.type.callback:
+        class: Sparkson\DataExporterBundle\Exporter\Type\CallbackType
+        tags:
+            -  { name: sparkson.data_exporter.type }
+
+    sparkson.data_exporter.type.boolean:
+        class: Sparkson\DataExporterBundle\Exporter\Type\BooleanType
+        tags:
+            -  { name: sparkson.data_exporter.type }

@@ -1,0 +1,27 @@
+{
+    "name": "sparkson/data-exporter-bundle",
+    "description": "Symfony data exporter bundle",
+    "keywords": ["exporter"],
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tamcy",
+            "email": "sparksonhk@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/symfony": "~2.7"
+    },
+    "require-dev": {
+    },
+    "suggest": {
+        "phpoffice/phpexcel": "To use the PHPExcel writer"
+    },
+    "autoload": {
+        "psr-4": { "Sparkson\\DataExporterBundle\\": "" }
+    },
+    "extra": {
+    },
+    "minimum-stability": "dev"
+}
