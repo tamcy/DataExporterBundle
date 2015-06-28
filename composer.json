@@ -15,7 +15,8 @@
         "symfony/options-resolver": "~2.7"
     },
     "require-dev": {
-        "symfony/framework-bundle": "~2.7"
+        "symfony/framework-bundle": "~2.7",
+        "phpoffice/phpexcel": "~1.8"
     },
     "suggest": {
         "phpoffice/phpexcel": "To use the PHPExcel writer"
