@@ -1,11 +1,11 @@
 <?php
 
-namespace Sparkson\DataExporterBundle\Exporter\Writer;
+namespace Sparkson\DataExporterBundle\Exporter\Output;
 
-use Sparkson\DataExporterBundle\Exporter\AbstractWriter;
+use Sparkson\DataExporterBundle\Exporter\AbstractOutputAdapter;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CSVWriter extends AbstractWriter
+class CSVAdapter extends AbstractOutputAdapter
 {
     private $handle;
 

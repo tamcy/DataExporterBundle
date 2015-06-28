@@ -5,7 +5,7 @@ namespace Sparkson\DataExporterBundle\Exporter;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-abstract class AbstractWriter implements WriterInterface
+abstract class AbstractOutputAdapter implements OutputInterface
 {
     protected $options;
 

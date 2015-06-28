@@ -6,7 +6,7 @@ namespace Sparkson\DataExporterBundle\Tests\Exporter;
 use Sparkson\DataExporterBundle\Exporter\Column\Column;
 use Sparkson\DataExporterBundle\Exporter\Exporter;
 use Sparkson\DataExporterBundle\Exporter\Type\StringType;
-use Sparkson\DataExporterBundle\Exporter\Writer\CSVWriter;
+use Sparkson\DataExporterBundle\Exporter\Output\CSVAdapter;
 
 class ExporterTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,7 +22,7 @@ class ExporterTest extends \PHPUnit_Framework_TestCase
         $exporter
             ->add(new Column('firstName', new StringType(), array('property_path' => '[firstName]')))
             ->add(new Column('lastName', new StringType(), array('property_path' => '[lastName]')))
-            ->setWriter(new CSVWriter())
+            ->setOutput(new CSVAdapter())
             ->setData($this->dataSet1)
             ->execute();
         $result = $exporter->getResult();

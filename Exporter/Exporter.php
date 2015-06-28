@@ -15,9 +15,9 @@ class Exporter
     private $columns;
 
     /**
-     * @var WriterInterface
+     * @var OutputInterface
      */
-    private $writer;
+    private $output;
 
     /**
      * @var array
@@ -64,20 +64,20 @@ class Exporter
     }
 
     /**
-     * @return WriterInterface
+     * @return OutputInterface
      */
-    public function getWriter()
+    public function getOutput()
     {
-        return $this->writer;
+        return $this->output;
     }
 
     /**
-     * @param WriterInterface $writer
+     * @param OutputInterface $output
      * @return $this
      */
-    public function setWriter(WriterInterface $writer)
+    public function setOutput(OutputInterface $output)
     {
-        $this->writer = $writer;
+        $this->output = $output;
         return $this;
     }
 
@@ -89,14 +89,14 @@ class Exporter
             throw new InvalidArgumentException('The supplied data is not traversable.');
         }
 
-        $this->writer->setColumns(array_map(function (Column $column) {
+        $this->output->setColumns(array_map(function (Column $column) {
             return $column->getLabel();
         }, $columns));
 
-        $this->writer->begin();
+        $this->output->begin();
 
         foreach ($this->data as $idx => $a) {
-            $this->writer->beginRow();
+            $this->output->beginRow();
 
             foreach ($columns as $pos => $column) {
                 $options = $column->getOptions();
@@ -111,19 +111,19 @@ class Exporter
                     throw new InvalidArgumentException('Column type must either implement SimpleExporterTypeInterface or ComplexExporterTypeInterface');
                 }
 
-                $this->writer->writeColumn($value, $options['writer_options']);
+                $this->output->writeColumn($value, $options['writer_options']);
             }
 
-            $this->writer->endRow();
+            $this->output->endRow();
         }
 
-        $this->writer->end();
+        $this->output->end();
         return $this;
     }
 
     public function getResult()
     {
-        return $this->writer->getResult();
+        return $this->output->getResult();
     }
 
 }

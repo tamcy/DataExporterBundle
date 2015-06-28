@@ -24,7 +24,7 @@ class ExporterBuilder
     private $columns;
 
     /**
-     * @var WriterInterface
+     * @var OutputInterface
      */
     private $writer;
 
@@ -59,10 +59,10 @@ class ExporterBuilder
     }
 
     /**
-     * @param WriterInterface $writer
+     * @param OutputInterface $writer
      * @return $this
      */
-    public function setWriter(WriterInterface $writer)
+    public function setWriter(OutputInterface $writer)
     {
         $this->writer = $writer;
         return $this;
@@ -87,7 +87,7 @@ class ExporterBuilder
             $instance->add(new Column($columnName, $type, $columnData['options']));
         }
 
-        $instance->setWriter($this->writer);
+        $instance->setOutput($this->writer);
 
         if ($this->data) {
             $instance->setData($this->data);

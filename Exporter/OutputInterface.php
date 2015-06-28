@@ -3,7 +3,7 @@
 namespace Sparkson\DataExporterBundle\Exporter;
 
 
-interface WriterInterface
+interface OutputInterface
 {
     public function setColumns(array $columns);
 
