@@ -4,6 +4,8 @@ namespace Sparkson\DataExporterBundle\Exporter;
 
 use Sparkson\DataExporterBundle\Exporter\Column\Column;
 use Sparkson\DataExporterBundle\Exporter\Column\ColumnCollection;
+use Sparkson\DataExporterBundle\Exporter\Exception\InvalidArgumentException;
+use Sparkson\DataExporterBundle\Exporter\ValueResolver\SimpleTypeColumnValueResolver;
 
 class Exporter
 {
@@ -31,7 +33,7 @@ class Exporter
     public function __construct(ColumnValueResolverInterface $valueResolver = null)
     {
         $this->columns = new ColumnCollection();
-        $this->valueResolver = $valueResolver ?: new SimpleTypeRawValueResolver();
+        $this->valueResolver = $valueResolver ?: new SimpleTypeColumnValueResolver();
     }
 
     public function add(Column $column)
@@ -58,6 +60,7 @@ class Exporter
     public function setData($data)
     {
         $this->data = $data;
+        return $this;
     }
 
     /**
@@ -82,6 +85,10 @@ class Exporter
     {
         $columns = $this->columns->getSortedActiveColumns();
 
+        if (!is_array($this->data) && !$this->data instanceof \Traversable) {
+            throw new InvalidArgumentException('The supplied data is not traversable.');
+        }
+
         $this->writer->setColumns(array_map(function (Column $column) {
             return $column->getLabel();
         }, $columns));
@@ -101,7 +108,7 @@ class Exporter
                 } elseif ($columnType instanceof ComplexExporterTypeInterface) {
                     $value = $columnType->getValue($a, $column->getName(), $options);
                 } else {
-                    throw new \Exception('Column type must either implement SimpleExporterTypeInterface or ComplexExporterTypeInterface');
+                    throw new InvalidArgumentException('Column type must either implement SimpleExporterTypeInterface or ComplexExporterTypeInterface');
                 }
 
                 $this->writer->writeColumn($value, $options['writer_options']);

@@ -3,6 +3,8 @@
 namespace Sparkson\DataExporterBundle\Exporter;
 
 
+use Sparkson\DataExporterBundle\Exporter\Exception\TypeNotFoundException;
+
 class TypeRegistry implements TypeResolverInterface
 {
     private $types;
@@ -22,5 +24,6 @@ class TypeRegistry implements TypeResolverInterface
         if (isset($this->types[$name])) {
             return $this->types[$name];
         }
+        throw new TypeNotFoundException(sprintf('Exporter type %s not found.', $name));
     }
 }

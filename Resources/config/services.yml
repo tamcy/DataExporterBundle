@@ -13,7 +13,7 @@ services:
         class: Sparkson\DataExporterBundle\Exporter\TypeRegistry
 
     sparkson.data_exporter.default_column_resolver:
-        class: Sparkson\DataExporterBundle\Exporter\SimpleTypeRawValueResolver
+        class: Sparkson\DataExporterBundle\Exporter\ValueResolver\SimpleTypeColumnValueResolver
 
 
     # Column types

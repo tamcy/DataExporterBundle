@@ -23,7 +23,6 @@ abstract class AbstractType implements ExporterTypeInterface
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'property_path' => null,
             'label' => null,
             'writer_options' => array(),
             'translation_domain' => null,

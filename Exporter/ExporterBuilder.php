@@ -4,6 +4,7 @@ namespace Sparkson\DataExporterBundle\Exporter;
 
 
 use Sparkson\DataExporterBundle\Exporter\Column\Column;
+use Sparkson\DataExporterBundle\Exporter\Exception\ExporterTypeException;
 
 class ExporterBuilder
 {
@@ -81,9 +82,6 @@ class ExporterBuilder
                 $type = $columnData;
             } else {
                 $type = $this->typeResolver->getType($type);
-                if (!$type) {
-                    throw new \Exception('Unable to resolve exporter type ' . $type);
-                }
             }
 
             $instance->add(new Column($columnName, $type, $columnData['options']));

@@ -16,6 +16,9 @@ abstract class AbstractSimpleType extends AbstractType implements SimpleExporter
 
         $resolver->setDefaults(array(
             'property_path' => null,
+            'filters' => array(),
         ));
+
+        $resolver->setAllowedTypes('filters', 'array');
     }
 }

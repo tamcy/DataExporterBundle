@@ -1,13 +1,13 @@
 <?php
 
-namespace Sparkson\DataExporterBundle\Exporter;
-
+namespace Sparkson\DataExporterBundle\Exporter\ValueResolver;
 
 use Sparkson\DataExporterBundle\Exporter\Column\Column;
+use Sparkson\DataExporterBundle\Exporter\ColumnValueResolverInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
-class SimpleTypeRawValueResolver implements  ColumnValueResolverInterface
+class SimpleTypeColumnValueResolver implements ColumnValueResolverInterface
 {
     /**
      * @var PropertyAccessorInterface
@@ -26,11 +26,16 @@ class SimpleTypeRawValueResolver implements  ColumnValueResolverInterface
 
         $rawValue = $this->propertyAccessor->getValue($data, $propertyPath);
 
-//        if ($options['filters']) {
-//            foreach ($options['filters'] as $filter => $filterOptions) {
-//
-//            }
-//        }
+        if ($options['filters']) {
+            foreach ($options['filters'] as $filter) {
+                if ($filter instanceof FilterInterface) {
+                    $rawValue = $filter->filterValue($rawValue);
+                } else {
+                    // Assume simple function that accepts value as the first parameter
+                    $rawValue = call_user_func($filter, $rawValue);
+                }
+            }
+        }
         return $rawValue;
     }
 }
