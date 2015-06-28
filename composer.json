@@ -11,15 +11,17 @@
         }
     ],
     "require": {
-        "symfony/symfony": "~2.7"
+        "symfony/property-access": "~2.7",
+        "symfony/options-resolver": "~2.7"
     },
     "require-dev": {
+        "symfony/framework-bundle": "~2.7"
     },
     "suggest": {
         "phpoffice/phpexcel": "To use the PHPExcel writer"
     },
     "autoload": {
-        "psr-4": { "Sparkson\\DataExporterBundle\\": "" }
+        "psr-4": {"Sparkson\\DataExporterBundle\\": ""}
     },
     "extra": {
     },
