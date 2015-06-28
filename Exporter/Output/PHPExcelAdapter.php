@@ -3,6 +3,7 @@
 namespace Sparkson\DataExporterBundle\Exporter\Output;
 
 use Sparkson\DataExporterBundle\Exporter\AbstractOutputAdapter;
+use Sparkson\DataExporterBundle\Exporter\Column\Column;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PHPExcelAdapter extends AbstractOutputAdapter
@@ -23,9 +24,10 @@ class PHPExcelAdapter extends AbstractOutputAdapter
     private $worksheet;
 
     private $row;
-    private $col;
 
     private $data;
+
+    private $headerDrawn = false;
 
     protected function configureOptions(OptionsResolver $resolver)
     {
@@ -86,12 +88,15 @@ class PHPExcelAdapter extends AbstractOutputAdapter
         $this->excel->setActiveSheetIndex(0);
 
         $this->worksheet = $this->excel->getActiveSheet();
+    }
 
-        if ($this->options['header']) {
-
-            foreach ($this->columns as $idx => $value) {
+    protected function drawHeader(array $columns)
+    {
+        if (!$this->headerDrawn && $this->options['header']) {
+            /** @var Column $column */
+            foreach ($columns as $idx => $column) {
                 $cell = $this->worksheet->getCellByColumnAndRow($idx, $this->row);
-                $cell->setValueExplicit($value, \PHPExcel_Cell_DataType::TYPE_STRING);
+                $cell->setValueExplicit($column->getLabel(), \PHPExcel_Cell_DataType::TYPE_STRING);
 
                 $style = $this->worksheet->getStyleByColumnAndRow($idx, $this->row);
                 $style->getFont()->setBold(true);
@@ -99,25 +104,29 @@ class PHPExcelAdapter extends AbstractOutputAdapter
 
             $this->row++;
         }
+
+        $this->headerDrawn = true;
     }
 
-    public function beginRow()
+    public function writeRecord(array $columns, array $record)
     {
-        $this->col = 0;
-    }
+        $this->drawHeader($columns);
 
-    public function writeColumn($value, array $options)
-    {
-        if ((string)$value !== '') {
-            $cell = $this->worksheet->getCellByColumnAndRow($this->col, $this->row);
-            $this->worksheet->getColumnDimensionByColumn($this->col)->setAutoSize(true);
-            $cell->setValueExplicit($value, $this->guessCellType($value));
+        $col = 0;
+
+        /** @var Column $column */
+        foreach ($columns as $idx => $column) {
+            $value = $record[$column->getName()];
+
+            if ((string)$value !== '') {
+                $cell = $this->worksheet->getCellByColumnAndRow($col, $this->row);
+                $this->worksheet->getColumnDimensionByColumn($col)->setAutoSize(true);
+                $cell->setValueExplicit($value, $this->guessCellType($value));
+            }
+
+            $col++;
         }
-        $this->col++;
-    }
 
-    public function endRow()
-    {
         $this->row++;
     }
 
@@ -135,6 +144,5 @@ class PHPExcelAdapter extends AbstractOutputAdapter
     {
         return $this->data;
     }
-
 
 }

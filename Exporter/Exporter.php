@@ -89,15 +89,11 @@ class Exporter
             throw new InvalidArgumentException('The supplied data is not traversable.');
         }
 
-        $this->output->setColumns(array_map(function (Column $column) {
-            return $column->getLabel();
-        }, $columns));
-
         $this->output->begin();
 
         foreach ($this->data as $idx => $a) {
-            $this->output->beginRow();
 
+            $record = array();
             foreach ($columns as $pos => $column) {
                 $options = $column->getOptions();
                 $columnType = $column->getType();
@@ -111,10 +107,10 @@ class Exporter
                     throw new InvalidArgumentException('Column type must either implement SimpleExporterTypeInterface or ComplexExporterTypeInterface');
                 }
 
-                $this->output->writeColumn($value, $options['writer_options']);
+                $record[$column->getName()] = $value;
             }
 
-            $this->output->endRow();
+            $this->output->writeRecord($columns, $record);
         }
 
         $this->output->end();

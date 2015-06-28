@@ -3,15 +3,16 @@
 namespace Sparkson\DataExporterBundle\Exporter\Output;
 
 use Sparkson\DataExporterBundle\Exporter\AbstractOutputAdapter;
+use Sparkson\DataExporterBundle\Exporter\Column\Column;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CSVAdapter extends AbstractOutputAdapter
 {
     private $handle;
 
-    private $fields;
-
     private $data;
+
+    private $headerDrawn = false;
 
     protected function configureOptions(OptionsResolver $resolver)
     {
@@ -33,24 +34,33 @@ class CSVAdapter extends AbstractOutputAdapter
     {
         $this->handle = fopen($this->options['output'], 'r+');
         $this->data = null;
-        if ($this->options['header']) {
-            fputcsv($this->handle, $this->columns, $this->options['delimiter'], $this->options['enclosure'], $this->options['escape_char']);
+    }
+
+    protected function drawHeader(array $columns)
+    {
+        $columnLabels = array_map(function (Column $column) {
+            return $column->getLabel();
+        }, $columns);
+
+        if (!$this->headerDrawn && $this->options['header']) {
+            fputcsv($this->handle, $columnLabels, $this->options['delimiter'], $this->options['enclosure'], $this->options['escape_char']);
         }
+
+        $this->headerDrawn = true;
     }
 
-    public function beginRow()
+    public function writeRecord(array $columns, array $record)
     {
-        $this->fields = array();
-    }
+        $this->drawHeader($columns);
 
-    public function writeColumn($value, array $options)
-    {
-        $this->fields[] = $value;
-    }
+        $fields = array();
 
-    public function endRow()
-    {
-        fputcsv($this->handle, $this->fields, $this->options['delimiter'], $this->options['enclosure'], $this->options['escape_char']);
+        /** @var Column $column */
+        foreach ($columns as $column) {
+            $fields[] = $record[$column->getName()];
+        }
+
+        fputcsv($this->handle, $fields, $this->options['delimiter'], $this->options['enclosure'], $this->options['escape_char']);
     }
 
     public function end()

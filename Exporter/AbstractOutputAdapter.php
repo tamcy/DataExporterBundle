@@ -9,8 +9,6 @@ abstract class AbstractOutputAdapter implements OutputInterface
 {
     protected $options;
 
-    protected $columns;
-
     public function __construct(array $options = array())
     {
         $resolver = new OptionsResolver();
@@ -19,10 +17,6 @@ abstract class AbstractOutputAdapter implements OutputInterface
         $this->options = $resolver->resolve($options);
     }
 
-    public function setColumns(array $columns)
-    {
-        $this->columns = $columns;
-    }
 
     /**
      * Configures the options for this type.
