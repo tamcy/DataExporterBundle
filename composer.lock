@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9070be2a967a3ff9d093d1429fb27314",
+    "hash": "24ca4281dd3e29bee5b470710963d40a",
     "packages": [
         {
             "name": "symfony/options-resolver",
@@ -246,45 +246,32 @@
         },
         {
             "name": "phpoffice/phpexcel",
-            "version": "1.9.x-dev",
+            "version": "1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPOffice/PHPExcel.git",
-                "reference": "ed087dd396a42da9c8deca6095c7e6c2b2815b75"
+                "reference": "e69a5e4d0ffa7fb6f171859e0a04346e580df30b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPOffice/PHPExcel/zipball/ed087dd396a42da9c8deca6095c7e6c2b2815b75",
-                "reference": "ed087dd396a42da9c8deca6095c7e6c2b2815b75",
+                "url": "https://api.github.com/repos/PHPOffice/PHPExcel/zipball/e69a5e4d0ffa7fb6f171859e0a04346e580df30b",
+                "reference": "e69a5e4d0ffa7fb6f171859e0a04346e580df30b",
                 "shasum": ""
             },
             "require": {
                 "ext-xml": "*",
                 "ext-xmlwriter": "*",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "mikey179/vfsstream": "1.5.*",
-                "phpunit/phpunit": "4.6.*",
-                "squizlabs/php_codesniffer": "2.*"
-            },
-            "suggest": {
-                "dompdf/dompdf": "Option for rendering PDF with PDF Writer",
-                "ext-gd2": "*",
-                "ext-zip": "*",
-                "jpgraph/jpgraph": "Option for rendering charts, or including charts with PDF or HTML Writers",
-                "mpdf/mpdf": "Option for rendering PDF with PDF Writer",
-                "tecnick.com/tcpdf": "Option for rendering PDF with PDF Writer"
+                "php": ">=5.2.0"
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "PHPExcel\\": "src/PhpSpreadsheet"
+                "psr-0": {
+                    "PHPExcel": "Classes/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "LGPL-2.1"
+                "LGPL"
             ],
             "authors": [
                 {
@@ -295,11 +282,11 @@
                     "name": "Mark Baker"
                 },
                 {
-                    "name": "Erik Tilt"
+                    "name": "Franck Lefevre",
+                    "homepage": "http://blog.rootslabs.net"
                 },
                 {
-                    "name": "Franck Lefevre",
-                    "homepage": "http://rootslabs.net"
+                    "name": "Erik Tilt"
                 }
             ],
             "description": "PHPExcel - OpenXML - Read, Create and Write Spreadsheet documents in PHP - Spreadsheet engine",
@@ -312,7 +299,7 @@
                 "xls",
                 "xlsx"
             ],
-            "time": "2015-06-03 07:21:50"
+            "time": "2014-03-02 15:22:49"
         },
         {
             "name": "psr/log",
