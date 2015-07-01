@@ -7,7 +7,7 @@ use Sparkson\DataExporterBundle\Exporter\ExporterBuilder;
 use Sparkson\DataExporterBundle\Exporter\Type\AbstractSimpleType;
 use Sparkson\DataExporterBundle\Exporter\Type\AbstractType;
 
-class AddressType extends AbstractSimpleType
+class AddressType extends AbstractType
 {
     public function buildExporter(ExporterBuilder $builder)
     {

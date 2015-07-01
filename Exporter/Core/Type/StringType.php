@@ -27,7 +27,7 @@ class StringType extends AbstractSimpleType
         return 'string';
     }
 
-    public function getValue($value, array $options)
+    protected function processValue($value, $options)
     {
         return $options['format'] ? sprintf($options['format'], $value) : $value;
     }

@@ -16,38 +16,32 @@ class SimpleTypeColumnValueResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testResolveObjectValue()
     {
-        $column = new Column('name', new StringType());
-
         $obj = new \stdClass();
         $obj->name = 'Foo Bar';
 
-        $this->assertEquals('Foo Bar', $this->newObject()->getValue($obj, $column));
+        $this->assertEquals('Foo Bar', $this->newObject()->getValue($obj, 'name', array()));
     }
 
     public function testResolveValueWithSimpleFilter()
     {
-        $column = new Column('name', new StringType(), array(
-            'filters' => array('trim'),
-        ));
-
         $obj = new \stdClass();
         $obj->name = '   Foo Bar   ';
-        $this->assertEquals('Foo Bar', $this->newObject()->getValue($obj, $column));
+        $this->assertEquals('Foo Bar', $this->newObject()->getValue($obj, 'name', array('filters' => array('trim'))));
     }
 
     public function testResolveValueWithCustomFilter()
     {
-        $column = new Column('name', new StringType(), array(
+        $options = array(
             'filters' => array(
                 'trim',
                 new CustomFilter(function ($value) {
                     return str_replace('Foo', 'Baz', $value);
                 })),
-        ));
+        );
 
         $obj = new \stdClass();
         $obj->name = '   Foo Bar   ';
-        $this->assertEquals('Baz Bar', $this->newObject()->getValue($obj, $column));
+        $this->assertEquals('Baz Bar', $this->newObject()->getValue($obj, 'name', $options));
     }
 
 }

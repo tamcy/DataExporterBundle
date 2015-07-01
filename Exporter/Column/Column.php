@@ -41,10 +41,6 @@ class Column extends AbstractColumnContainer implements ColumnInterface
 
         $this->options = $resolver->resolve($options);
 
-        if (!$this->options['compound'] && !$type instanceof SimpleExporterTypeInterface && !$type instanceof ComplexExporterTypeInterface) {
-            throw new \Exception('Non-compound column type must either implement SimpleExporterTypeInterface or ComplexExporterTypeInterface');
-        }
-
         $this->name = $name;
         $this->type = $type;
     }

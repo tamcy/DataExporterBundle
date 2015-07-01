@@ -7,8 +7,6 @@ use Sparkson\DataExporterBundle\Exporter\Column\ColumnCollection;
 use Sparkson\DataExporterBundle\Exporter\Column\ColumnCollectionInterface;
 use Sparkson\DataExporterBundle\Exporter\Exception\InvalidArgumentException;
 use Sparkson\DataExporterBundle\Exporter\Output\OutputInterface;
-use Sparkson\DataExporterBundle\Exporter\Type\ComplexExporterTypeInterface;
-use Sparkson\DataExporterBundle\Exporter\Type\SimpleExporterTypeInterface;
 use Sparkson\DataExporterBundle\Exporter\ValueResolver\ColumnValueResolverInterface;
 use Sparkson\DataExporterBundle\Exporter\ValueResolver\SimpleTypeColumnValueResolver;
 
@@ -112,14 +110,7 @@ class Exporter
             $options = $column->getOptions();
             $columnType = $column->getType();
 
-            if ($columnType instanceof SimpleExporterTypeInterface) { // assume column with child type are simple type for now
-                $rawValue = $this->valueResolver->getValue($row, $column, $options);
-                $value = $columnType->getValue($rawValue, $options);
-            } elseif ($columnType instanceof ComplexExporterTypeInterface) {
-                $value = $columnType->getValue($row, $column->getName(), $options);
-            } else {
-                throw new InvalidArgumentException('Column type must either implement SimpleExporterTypeInterface or ComplexExporterTypeInterface');
-            }
+            $value = $columnType->getValue($this->valueResolver, $row, $column->getName(), $options);
 
             if ($column->hasChildren()) {
                 $record[$column->getName()] = $this->processRow($column->getSortedActiveColumns(), $value);

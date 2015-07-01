@@ -3,9 +3,10 @@
 namespace Sparkson\DataExporterBundle\Exporter\Type;
 
 
+use Sparkson\DataExporterBundle\Exporter\ValueResolver\ColumnValueResolverInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-abstract class AbstractSimpleType extends AbstractType implements SimpleExporterTypeInterface
+abstract class AbstractSimpleType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -13,18 +14,12 @@ abstract class AbstractSimpleType extends AbstractType implements SimpleExporter
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-
-        $resolver->setDefaults(array(
-            'property_path' => null,
-            'filters' => array(),
-        ));
-
-        $resolver->setAllowedTypes('filters', 'array');
     }
 
-    public function getValue($value, array $options)
+    abstract protected function processValue($value, $options);
+
+    public function getValue(ColumnValueResolverInterface $valueResolver, $data, $fieldName, array $options)
     {
-        return $value;
+        return $this->processValue(parent::getValue($valueResolver, $data, $fieldName, $options), $options);
     }
-
 }

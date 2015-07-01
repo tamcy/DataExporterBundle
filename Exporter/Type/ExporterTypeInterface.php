@@ -4,6 +4,7 @@ namespace Sparkson\DataExporterBundle\Exporter\Type;
 
 
 use Sparkson\DataExporterBundle\Exporter\ExporterBuilder;
+use Sparkson\DataExporterBundle\Exporter\ValueResolver\ColumnValueResolverInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 interface ExporterTypeInterface
@@ -15,5 +16,7 @@ interface ExporterTypeInterface
     public function getName();
 
     public function buildExporter(ExporterBuilder $builder);
+
+    public function getValue(ColumnValueResolverInterface $valueResolver, $data, $fieldName, array $options);
 
 }

@@ -3,6 +3,7 @@
 namespace Sparkson\DataExporterBundle\Exporter\Type;
 
 use Sparkson\DataExporterBundle\Exporter\ExporterBuilder;
+use Sparkson\DataExporterBundle\Exporter\ValueResolver\ColumnValueResolverInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class AbstractType implements ExporterTypeInterface
@@ -32,10 +33,13 @@ abstract class AbstractType implements ExporterTypeInterface
             'writer_options' => array(),
             'translation_domain' => null,
             'compound' => true,
+            'filters' => array(),
+            'property_path' => null,
         ));
 
         $resolver->setAllowedTypes('writer_options', 'array');
         $resolver->setAllowedTypes('compound', 'bool');
+        $resolver->setAllowedTypes('filters', 'array');
     }
 
     public function getName()
@@ -43,4 +47,10 @@ abstract class AbstractType implements ExporterTypeInterface
         return 'exporter';
     }
 
+    public function getValue(ColumnValueResolverInterface $valueResolver, $data, $fieldName, array $options)
+    {
+        $propertyPath = $options['property_path'] ?: $fieldName;
+
+        return $valueResolver->getValue($data, $propertyPath, $options);
+    }
 }

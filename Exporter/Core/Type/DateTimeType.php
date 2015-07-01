@@ -26,7 +26,7 @@ class DateTimeType extends AbstractSimpleType
 
     }
 
-    public function getValue($value, array $options)
+    protected function processValue($value, $options)
     {
         if (!$value) {
             return $options['empty_value'];

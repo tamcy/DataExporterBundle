@@ -30,7 +30,7 @@ class NumberType extends AbstractSimpleType
         return 'number';
     }
 
-    public function getValue($value, array $options)
+    protected function processValue($value, $options)
     {
         return number_format($value, $options['decimals'], $options['dec_point'], $options['thousands_sep']);
     }

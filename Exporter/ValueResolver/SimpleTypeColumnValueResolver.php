@@ -2,7 +2,6 @@
 
 namespace Sparkson\DataExporterBundle\Exporter\ValueResolver;
 
-use Sparkson\DataExporterBundle\Exporter\Column\Column;
 use Sparkson\DataExporterBundle\Exporter\ValueResolver\Filter\FilterInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -19,14 +18,11 @@ class SimpleTypeColumnValueResolver implements ColumnValueResolverInterface
         $this->propertyAccessor = $propertyAccessor ?: PropertyAccess::createPropertyAccessor();
     }
 
-    public function getValue($data, Column $column)
+    public function getValue($data, $propertyPath, $options)
     {
-        $options = $column->getOptions();
-        $propertyPath = $options['property_path'] ?: $column->getName();
-
         $rawValue = $this->propertyAccessor->getValue($data, $propertyPath);
 
-        if ($options['filters']) {
+        if (!empty($options['filters']) && is_array($options['filters'])) {
             foreach ($options['filters'] as $filter) {
                 if ($filter instanceof FilterInterface) {
                     $rawValue = $filter->filterValue($rawValue);

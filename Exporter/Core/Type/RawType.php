@@ -2,11 +2,10 @@
 
 namespace Sparkson\DataExporterBundle\Exporter\Core\Type;
 
-use Sparkson\DataExporterBundle\Exporter\Type\AbstractSimpleType;
 use Sparkson\DataExporterBundle\Exporter\Type\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class RawType extends AbstractSimpleType
+class RawType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -25,8 +24,4 @@ class RawType extends AbstractSimpleType
         return 'raw';
     }
 
-    public function getValue($value, array $options)
-    {
-        return $value;
-    }
 }

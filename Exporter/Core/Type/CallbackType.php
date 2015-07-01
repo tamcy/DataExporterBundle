@@ -25,7 +25,7 @@ class CallbackType extends AbstractSimpleType
         $resolver->setAllowedTypes('callback_options', array('array'));
     }
 
-    public function getValue($value, array $options)
+    protected function processValue($value, $options)
     {
         $callable = $options['callback'];
 

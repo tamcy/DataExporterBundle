@@ -21,7 +21,7 @@ class BooleanType extends AbstractSimpleType
         ));
     }
 
-    public function getValue($value, array $options)
+    protected function processValue($value, $options)
     {
         if ($value) {
             return $options['true_value'];

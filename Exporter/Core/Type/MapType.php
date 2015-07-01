@@ -28,7 +28,7 @@ class MapType extends AbstractSimpleType
         return 'map';
     }
 
-    public function getValue($value, array $options)
+    protected function processValue($value, $options)
     {
         if (isset($options['map'][$value])) {
             return $options['map'][$value];

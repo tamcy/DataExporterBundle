@@ -6,7 +6,7 @@ use Sparkson\DataExporterBundle\Exporter\ExporterBuilder;
 use Sparkson\DataExporterBundle\Exporter\Type\AbstractSimpleType;
 use Sparkson\DataExporterBundle\Exporter\Type\AbstractType;
 
-class ProfileType extends AbstractSimpleType
+class ProfileType extends AbstractType
 {
     public function buildExporter(ExporterBuilder $builder)
     {
