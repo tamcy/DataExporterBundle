@@ -29,7 +29,7 @@ abstract class BaseFlattenOutputAdapter extends AbstractOutputAdapter
         foreach ($columns as $column) {
             if ($column->hasChildren()) {
                 $prefixes[] = $column->getName();
-                $this->flattenColumns($column->getSortedActiveColumns(), $prefixes);
+                $this->flattenColumns($column->getBuiltColumns(), $prefixes);
             } else {
                 $this->flatColumnLabels[$this->getColumnName($column, $prefixes)] = $column->getLabel();
             }
@@ -51,7 +51,7 @@ abstract class BaseFlattenOutputAdapter extends AbstractOutputAdapter
         foreach ($columns as $column) {
             if ($column->hasChildren()) {
                 $prefixes[] = $column->getName();
-                $this->flattenRecord($result, $record[$column->getName()], $column->getSortedActiveColumns(), $prefixes);
+                $this->flattenRecord($result, $record[$column->getName()], $column->getBuiltColumns(), $prefixes);
             } else {
                 $key = $this->getColumnName($column, $prefixes);
                 $result[$key] = $record[$column->getName()];

@@ -3,13 +3,29 @@
 namespace Sparkson\DataExporterBundle\Exporter\Column;
 
 
+use Sparkson\DataExporterBundle\Exporter\Exception\InvalidOperationException;
+
 abstract class AbstractColumnContainer implements ColumnCollectionInterface
 {
     protected $children;
 
+    /**
+     * @var Column[]
+     */
+    protected $sortedColumns;
+
+    protected $locked = false;
+
     public function setChildren(array $children)
     {
         $this->children = $children;
+    }
+
+    protected function assertNotLocked()
+    {
+        if ($this->locked) {
+            throw new InvalidOperationException("Cannot modify a locked column set");
+        }
     }
 
     /**
@@ -27,6 +43,8 @@ abstract class AbstractColumnContainer implements ColumnCollectionInterface
 
     public function addChild(ColumnInterface $column)
     {
+        $this->assertNotLocked();
+
         if (!isset($this->children[$column->getName()])) {
             $position = count($this->children);
         } else {
@@ -55,6 +73,33 @@ abstract class AbstractColumnContainer implements ColumnCollectionInterface
         if ($this->hasChild($columnName)) {
             unset($this->children[$columnName]);
         }
+    }
+
+    public function build()
+    {
+        if ($this->hasChildren()) {
+            $columns = array_values(array_filter($this->children, function (ColumnInterface $col) {
+                return $col->isEnabled();
+            }));
+
+            usort($columns, function (ColumnInterface $colA, ColumnInterface $colB) {
+                return $colA->getPosition() - $colB->getPosition();
+            });
+
+            foreach ($columns as $column) {
+                $column->build();
+            }
+            $this->sortedColumns = $columns;
+        }
+        $this->locked = true;
+    }
+
+    /**
+     * @return Column[]
+     */
+    public function getBuiltColumns()
+    {
+        return $this->sortedColumns;
     }
 
     /**
@@ -87,22 +132,6 @@ abstract class AbstractColumnContainer implements ColumnCollectionInterface
     public function offsetUnset($offset)
     {
         $this->removeChild($offset);
-    }
-
-    /**
-     * @return Column[]
-     */
-    public function getSortedActiveColumns()
-    {
-        $columns = array_values(array_filter($this->children, function (ColumnInterface $col) {
-            return $col->isEnabled();
-        }));
-
-        usort($columns, function (ColumnInterface $colA, ColumnInterface $colB) {
-            return $colA->getPosition() - $colB->getPosition();
-        });
-
-        return $columns;
     }
 
     public function count()

@@ -18,9 +18,11 @@ interface ColumnCollectionInterface extends \ArrayAccess, \Countable
 
     public function removeChild($columnName);
 
+    public function build();
+
     /**
      * @return Column[]
      */
-    public function getSortedActiveColumns();
+    public function getBuiltColumns();
 
 }

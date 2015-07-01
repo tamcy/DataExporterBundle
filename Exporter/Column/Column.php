@@ -2,9 +2,7 @@
 
 namespace Sparkson\DataExporterBundle\Exporter\Column;
 
-use Sparkson\DataExporterBundle\Exporter\Type\ComplexExporterTypeInterface;
 use Sparkson\DataExporterBundle\Exporter\Type\ExporterTypeInterface;
-use Sparkson\DataExporterBundle\Exporter\Type\SimpleExporterTypeInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Column extends AbstractColumnContainer implements ColumnInterface
@@ -83,6 +81,7 @@ class Column extends AbstractColumnContainer implements ColumnInterface
      */
     public function setOptions($options)
     {
+        $this->assertNotLocked();
         $this->options = $options;
     }
 
@@ -99,6 +98,7 @@ class Column extends AbstractColumnContainer implements ColumnInterface
      */
     public function setEnabled($enabled)
     {
+        $this->assertNotLocked();
         $this->enabled = $enabled;
     }
 
@@ -115,6 +115,7 @@ class Column extends AbstractColumnContainer implements ColumnInterface
      */
     public function setPosition($position)
     {
+        $this->assertNotLocked();
         $this->position = $position;
     }
 

@@ -79,7 +79,9 @@ class Exporter
 
     public function execute()
     {
-        $columns = $this->columns->getSortedActiveColumns();
+        $this->columns->build();
+
+        $columns = $this->columns->getBuiltColumns();
 
         if (!is_array($this->data) && !$this->data instanceof \Traversable) {
             throw new InvalidArgumentException('The supplied data is not traversable.');
@@ -113,7 +115,7 @@ class Exporter
             $value = $columnType->getValue($this->valueResolver, $row, $column->getName(), $options);
 
             if ($column->hasChildren()) {
-                $record[$column->getName()] = $this->processRow($column->getSortedActiveColumns(), $value);
+                $record[$column->getName()] = $this->processRow($column->getBuiltColumns(), $value);
             } else {
                 $record[$column->getName()] = $value;
             }
