@@ -2,7 +2,7 @@
 
 namespace Sparkson\DataExporterBundle\Exporter\Column;
 
-class ColumnCollection extends AbstractColumnContainer
+class ColumnSet extends AbstractColumnContainer
 {
 
 }

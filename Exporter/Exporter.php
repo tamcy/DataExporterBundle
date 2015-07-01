@@ -3,7 +3,7 @@
 namespace Sparkson\DataExporterBundle\Exporter;
 
 use Sparkson\DataExporterBundle\Exporter\Column\Column;
-use Sparkson\DataExporterBundle\Exporter\Column\ColumnCollection;
+use Sparkson\DataExporterBundle\Exporter\Column\ColumnSet;
 use Sparkson\DataExporterBundle\Exporter\Column\ColumnCollectionInterface;
 use Sparkson\DataExporterBundle\Exporter\Exception\InvalidArgumentException;
 use Sparkson\DataExporterBundle\Exporter\Output\OutputInterface;
@@ -35,7 +35,7 @@ class Exporter
 
     public function __construct(ColumnValueResolverInterface $valueResolver = null)
     {
-        $this->columns = new ColumnCollection();
+        $this->columns = new ColumnSet();
         $this->valueResolver = $valueResolver ?: new SimpleTypeColumnValueResolver();
     }
 

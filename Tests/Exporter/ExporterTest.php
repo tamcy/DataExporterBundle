@@ -3,7 +3,7 @@
 namespace Sparkson\DataExporterBundle\Tests\Exporter;
 
 use Sparkson\DataExporterBundle\Exporter\Column\Column;
-use Sparkson\DataExporterBundle\Exporter\Column\ColumnCollection;
+use Sparkson\DataExporterBundle\Exporter\Column\ColumnSet;
 use Sparkson\DataExporterBundle\Exporter\Core\Type\DummyType;
 use Sparkson\DataExporterBundle\Exporter\Core\Type\RawType;
 use Sparkson\DataExporterBundle\Exporter\Core\Type\StringType;
@@ -20,7 +20,7 @@ class ExporterTest extends \PHPUnit_Framework_TestCase
 
     public function testSimpleStructure()
     {
-        $columns = new ColumnCollection();
+        $columns = new ColumnSet();
         $columns->addChild(new Column('firstName', new StringType(), array('property_path' => '[firstName]')));
         $columns->addChild(new Column('lastName', new StringType(), array('property_path' => '[lastName]')));
 
@@ -40,7 +40,7 @@ Bar,Wong
 
     public function testNestedStructure()
     {
-        $columns = new ColumnCollection();
+        $columns = new ColumnSet();
         $columns->addChild(new Column('firstName', new StringType(), array('property_path' => '[firstName]')));
         $columns->addChild(new Column('lastName', new StringType(), array('property_path' => '[lastName]')));
 

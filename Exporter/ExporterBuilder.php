@@ -4,7 +4,7 @@ namespace Sparkson\DataExporterBundle\Exporter;
 
 
 use Sparkson\DataExporterBundle\Exporter\Column\Column;
-use Sparkson\DataExporterBundle\Exporter\Column\ColumnCollection;
+use Sparkson\DataExporterBundle\Exporter\Column\ColumnSet;
 use Sparkson\DataExporterBundle\Exporter\Exception\InvalidOperationException;
 use Sparkson\DataExporterBundle\Exporter\Type\ExporterTypeInterface;
 use Sparkson\DataExporterBundle\Exporter\Type\TypeResolverInterface;
@@ -66,7 +66,7 @@ class ExporterBuilder
 
     private function getResolveColumns()
     {
-        $columns = new ColumnCollection();
+        $columns = new ColumnSet();
 
         if ($this->rootType) {
             $this->locked = false;
