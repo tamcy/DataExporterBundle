@@ -3,7 +3,7 @@
 namespace Sparkson\DataExporterBundle\Exporter\ValueResolver;
 
 use Sparkson\DataExporterBundle\Exporter\Column\Column;
-use Sparkson\DataExporterBundle\Exporter\ColumnValueResolverInterface;
+use Sparkson\DataExporterBundle\Exporter\ValueResolver\Filter\FilterInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 

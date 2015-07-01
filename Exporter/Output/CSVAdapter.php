@@ -2,17 +2,14 @@
 
 namespace Sparkson\DataExporterBundle\Exporter\Output;
 
-use Sparkson\DataExporterBundle\Exporter\AbstractOutputAdapter;
 use Sparkson\DataExporterBundle\Exporter\Column\Column;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CSVAdapter extends AbstractOutputAdapter
+class CSVAdapter extends BaseFlattenOutputAdapter
 {
     private $handle;
 
     private $data;
-
-    private $headerDrawn = false;
 
     protected function configureOptions(OptionsResolver $resolver)
     {
@@ -32,32 +29,23 @@ class CSVAdapter extends AbstractOutputAdapter
 
     public function begin()
     {
+        parent::begin();
         $this->handle = fopen($this->options['output'], 'r+');
         $this->data = null;
     }
 
-    protected function drawHeader(array $columns)
+    protected function writeHeaderRow(array $columnLabels)
     {
-        $columnLabels = array_map(function (Column $column) {
-            return $column->getLabel();
-        }, $columns);
-
-        if (!$this->headerDrawn && $this->options['header']) {
-            fputcsv($this->handle, $columnLabels, $this->options['delimiter'], $this->options['enclosure'], $this->options['escape_char']);
-        }
-
-        $this->headerDrawn = true;
+        fputcsv($this->handle, $columnLabels, $this->options['delimiter'], $this->options['enclosure'], $this->options['escape_char']);
     }
 
-    public function writeRecord(array $columns, array $record)
+    protected function writeRecordRow(array $columnLabels, array $record)
     {
-        $this->drawHeader($columns);
-
         $fields = array();
 
         /** @var Column $column */
-        foreach ($columns as $column) {
-            $fields[] = $record[$column->getName()];
+        foreach ($columnLabels as $key => $columnLabel) {
+            $fields[] = $record[$key];
         }
 
         fputcsv($this->handle, $fields, $this->options['delimiter'], $this->options['enclosure'], $this->options['escape_char']);

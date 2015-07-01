@@ -3,6 +3,9 @@
 namespace Sparkson\DataExporterBundle\Exporter;
 
 
+use Sparkson\DataExporterBundle\Exporter\Type\TypeResolverInterface;
+use Sparkson\DataExporterBundle\Exporter\ValueResolver\ColumnValueResolverInterface;
+
 class ExporterFactory
 {
     /**
@@ -21,9 +24,14 @@ class ExporterFactory
         $this->valueResolver = $valueResolver;
     }
 
-    public function createBuilder($data = null)
+    public function createBuilder()
     {
-        return new ExporterBuilder($this->typeResolver, $this->valueResolver, $data);
+        return new ExporterBuilder($this->typeResolver, $this->valueResolver);
+    }
+
+    public function createExporter($type)
+    {
+        return (new ExporterBuilder($this->typeResolver, $this->valueResolver, $type))->getExporter();
     }
 
 }

@@ -1,11 +1,12 @@
 <?php
 
-namespace Sparkson\DataExporterBundle\Exporter\Type;
+namespace Sparkson\DataExporterBundle\Exporter\Core\Type;
 
-use Sparkson\DataExporterBundle\Exporter\AbstractSimpleType;
+use Sparkson\DataExporterBundle\Exporter\Type\AbstractSimpleType;
+use Sparkson\DataExporterBundle\Exporter\Type\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class StringType extends AbstractSimpleType
+class RawType extends AbstractSimpleType
 {
     /**
      * {@inheritdoc}
@@ -15,20 +16,17 @@ class StringType extends AbstractSimpleType
         parent::configureOptions($resolver);
 
         $resolver->setDefaults(array(
-            'format' => null,
+            'compound' => false,
         ));
-
-        $resolver->setAllowedTypes('format', array('null', 'string'));
     }
 
     public function getName()
     {
-        return 'string';
+        return 'raw';
     }
 
     public function getValue($value, array $options)
     {
-        return $options['format'] ? sprintf($options['format'], $value) : $value;
+        return $value;
     }
-
 }

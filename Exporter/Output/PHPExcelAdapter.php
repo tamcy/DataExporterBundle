@@ -2,11 +2,9 @@
 
 namespace Sparkson\DataExporterBundle\Exporter\Output;
 
-use Sparkson\DataExporterBundle\Exporter\AbstractOutputAdapter;
-use Sparkson\DataExporterBundle\Exporter\Column\Column;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class PHPExcelAdapter extends AbstractOutputAdapter
+class PHPExcelAdapter extends BaseFlattenOutputAdapter
 {
     /**
      * @var \PHPExcel_Writer_IWriter
@@ -79,6 +77,8 @@ class PHPExcelAdapter extends AbstractOutputAdapter
 
     public function begin()
     {
+        parent::begin();
+
         $this->data = null;
         $this->row = 1;
 
@@ -90,33 +90,27 @@ class PHPExcelAdapter extends AbstractOutputAdapter
         $this->worksheet = $this->excel->getActiveSheet();
     }
 
-    protected function drawHeader(array $columns)
+    protected function writeHeaderRow(array $columnLabels)
     {
-        if (!$this->headerDrawn && $this->options['header']) {
-            /** @var Column $column */
-            foreach ($columns as $idx => $column) {
-                $cell = $this->worksheet->getCellByColumnAndRow($idx, $this->row);
-                $cell->setValueExplicit($column->getLabel(), \PHPExcel_Cell_DataType::TYPE_STRING);
+        foreach ($columnLabels as $idx => $label) {
+            $cell = $this->worksheet->getCellByColumnAndRow($idx, $this->row);
+            $cell->setValueExplicit($label, \PHPExcel_Cell_DataType::TYPE_STRING);
 
-                $style = $this->worksheet->getStyleByColumnAndRow($idx, $this->row);
-                $style->getFont()->setBold(true);
-            }
-
-            $this->row++;
+            $style = $this->worksheet->getStyleByColumnAndRow($idx, $this->row);
+            $style->getFont()->setBold(true);
         }
+
+        $this->row++;
 
         $this->headerDrawn = true;
     }
 
-    public function writeRecord(array $columns, array $record)
+    protected function writeRecordRow(array $columnLabels, array $record)
     {
-        $this->drawHeader($columns);
-
         $col = 0;
 
-        /** @var Column $column */
-        foreach ($columns as $idx => $column) {
-            $value = $record[$column->getName()];
+        foreach ($columnLabels as $idx => $label) {
+            $value = $record[$idx];
 
             if ((string)$value !== '') {
                 $cell = $this->worksheet->getCellByColumnAndRow($col, $this->row);

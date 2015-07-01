@@ -1,6 +1,6 @@
 <?php
 
-namespace Sparkson\DataExporterBundle\Exporter;
+namespace Sparkson\DataExporterBundle\Exporter\Type;
 
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -21,4 +21,10 @@ abstract class AbstractSimpleType extends AbstractType implements SimpleExporter
 
         $resolver->setAllowedTypes('filters', 'array');
     }
+
+    public function getValue($value, array $options)
+    {
+        return $value;
+    }
+
 }

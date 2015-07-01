@@ -1,6 +1,6 @@
 <?php
 
-namespace Sparkson\DataExporterBundle\Exporter\ValueResolver;
+namespace Sparkson\DataExporterBundle\Exporter\ValueResolver\Filter;
 
 
 interface FilterInterface

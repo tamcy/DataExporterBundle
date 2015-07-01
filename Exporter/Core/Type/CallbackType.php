@@ -1,8 +1,8 @@
 <?php
 
-namespace Sparkson\DataExporterBundle\Exporter\Type;
+namespace Sparkson\DataExporterBundle\Exporter\Core\Type;
 
-use Sparkson\DataExporterBundle\Exporter\AbstractSimpleType;
+use Sparkson\DataExporterBundle\Exporter\Type\AbstractSimpleType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CallbackType extends AbstractSimpleType
@@ -17,6 +17,7 @@ class CallbackType extends AbstractSimpleType
         $resolver->setDefaults(array(
             'callback' => null,
             'callback_options' => array(),
+            'compound' => false,
         ));
 
         $resolver->setRequired('callback');

@@ -1,6 +1,6 @@
 <?php
 
-namespace Sparkson\DataExporterBundle\Exporter;
+namespace Sparkson\DataExporterBundle\Exporter\Type;
 
 
 interface SimpleExporterTypeInterface extends ExporterTypeInterface

@@ -1,7 +1,6 @@
 <?php
 
-namespace Sparkson\DataExporterBundle\Exporter;
-
+namespace Sparkson\DataExporterBundle\Exporter\Output;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

@@ -4,7 +4,11 @@ namespace Sparkson\DataExporterBundle\Exporter;
 
 
 use Sparkson\DataExporterBundle\Exporter\Column\Column;
-use Sparkson\DataExporterBundle\Exporter\Exception\ExporterTypeException;
+use Sparkson\DataExporterBundle\Exporter\Column\ColumnCollection;
+use Sparkson\DataExporterBundle\Exporter\Exception\InvalidOperationException;
+use Sparkson\DataExporterBundle\Exporter\Type\ExporterTypeInterface;
+use Sparkson\DataExporterBundle\Exporter\Type\TypeResolverInterface;
+use Sparkson\DataExporterBundle\Exporter\ValueResolver\ColumnValueResolverInterface;
 
 class ExporterBuilder
 {
@@ -21,31 +25,33 @@ class ExporterBuilder
     /**
      * @var array
      */
-    private $columns;
+    private $fields;
 
     /**
-     * @var OutputInterface
+     * @var ExporterTypeInterface
      */
-    private $writer;
+    private $rootType = null;
 
-    /**
-     * @var mixed
-     */
-    private $data = null;
+    private $locked = false;
 
     public function __construct(TypeResolverInterface $typeResolver,
                                 ColumnValueResolverInterface $valueResolver,
-                                $data = null)
+                                $rootType = null)
     {
-        $this->columns = array();
+        $this->fields = array();
         $this->typeResolver = $typeResolver;
         $this->valueResolver = $valueResolver;
-        $this->data = $data;
+        $this->rootType = $rootType;
+        $this->locked = ($rootType !== null);
     }
 
     public function add($name, $type = null, array $options = array())
     {
-        $this->columns[$name] = array(
+        if ($this->locked) {
+            throw new InvalidOperationException('This builder has a root type, so you cannot add additional field to it');
+        }
+
+        $this->fields[$name] = array(
             'type' => $type,
             'options' => $options,
         );
@@ -58,40 +64,44 @@ class ExporterBuilder
         return $this;
     }
 
-    /**
-     * @param OutputInterface $writer
-     * @return $this
-     */
-    public function setWriter(OutputInterface $writer)
+    private function getResolveColumns()
     {
-        $this->writer = $writer;
-        return $this;
-    }
+        $columns = new ColumnCollection();
 
-    public function getExporter()
-    {
-        $instance = new Exporter($this->valueResolver);
+        if ($this->rootType) {
+            $this->locked = false;
+            $type = $this->typeResolver->getType($this->rootType);
+            $type->buildExporter($this);
+        }
 
-        foreach ($this->columns as $columnName => $columnData) {
+        foreach ($this->fields as $columnName => $columnData) {
+
             $type = $columnData['type'];
             if ($type === null) {
                 $type = 'string';
             }
 
-            if ($type instanceof ExporterTypeInterface) {
-                $type = $columnData;
-            } else {
+            if (!$type instanceof ExporterTypeInterface) {
                 $type = $this->typeResolver->getType($type);
             }
 
-            $instance->add(new Column($columnName, $type, $columnData['options']));
-        }
+            $column = new Column($columnName, $type, $columnData['options']);
+            $options = $column->getOptions();
+            if ($options['compound']) {
+                $builder = new ExporterBuilder($this->typeResolver, $this->valueResolver);
+                $type->buildExporter($builder);
+                $column->setChildren($builder->getResolveColumns()->getChildren());
+            }
 
-        $instance->setOutput($this->writer);
-
-        if ($this->data) {
-            $instance->setData($this->data);
+            $columns->addChild($column);
         }
+        return $columns;
+    }
+
+    public function getExporter()
+    {
+        $instance = new Exporter($this->valueResolver);
+        $instance->setColumns($this->getResolveColumns());
 
         return $instance;
     }

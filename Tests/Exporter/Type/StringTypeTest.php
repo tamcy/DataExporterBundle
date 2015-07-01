@@ -2,7 +2,7 @@
 
 namespace Sparkson\DataExporterBundle\Tests\Exporter\Type;
 
-use Sparkson\DataExporterBundle\Exporter\Type\StringType;
+use Sparkson\DataExporterBundle\Exporter\Core\Type\StringType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class StringTypeTest extends \PHPUnit_Framework_TestCase

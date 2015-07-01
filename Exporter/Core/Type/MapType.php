@@ -1,8 +1,8 @@
 <?php
 
-namespace Sparkson\DataExporterBundle\Exporter\Type;
+namespace Sparkson\DataExporterBundle\Exporter\Core\Type;
 
-use Sparkson\DataExporterBundle\Exporter\AbstractSimpleType;
+use Sparkson\DataExporterBundle\Exporter\Type\AbstractSimpleType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MapType extends AbstractSimpleType
@@ -17,6 +17,7 @@ class MapType extends AbstractSimpleType
         $resolver->setDefaults(array(
             'default_value' => '',
             'map' => array(),
+            'compound' => false,
         ));
 
         $resolver->setAllowedTypes('map', array('null', 'array', '\Traversable'));
@@ -36,8 +37,4 @@ class MapType extends AbstractSimpleType
         return $options['map']['default_value'];
     }
 
-    public function setDefaultOptions(OptionsResolver $resolver)
-    {
-        // TODO: Implement setDefaultOptions() method.
-    }
 }

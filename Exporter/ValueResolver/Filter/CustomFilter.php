@@ -3,7 +3,6 @@
 namespace Sparkson\DataExporterBundle\Exporter\ValueResolver\Filter;
 
 use Sparkson\DataExporterBundle\Exporter\Exception\InvalidArgumentException;
-use Sparkson\DataExporterBundle\Exporter\ValueResolver\FilterInterface;
 
 class CustomFilter implements FilterInterface
 {

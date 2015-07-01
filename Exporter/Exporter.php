@@ -4,13 +4,18 @@ namespace Sparkson\DataExporterBundle\Exporter;
 
 use Sparkson\DataExporterBundle\Exporter\Column\Column;
 use Sparkson\DataExporterBundle\Exporter\Column\ColumnCollection;
+use Sparkson\DataExporterBundle\Exporter\Column\ColumnCollectionInterface;
 use Sparkson\DataExporterBundle\Exporter\Exception\InvalidArgumentException;
+use Sparkson\DataExporterBundle\Exporter\Output\OutputInterface;
+use Sparkson\DataExporterBundle\Exporter\Type\ComplexExporterTypeInterface;
+use Sparkson\DataExporterBundle\Exporter\Type\SimpleExporterTypeInterface;
+use Sparkson\DataExporterBundle\Exporter\ValueResolver\ColumnValueResolverInterface;
 use Sparkson\DataExporterBundle\Exporter\ValueResolver\SimpleTypeColumnValueResolver;
 
 class Exporter
 {
     /**
-     * @var ColumnCollection
+     * @var ColumnCollectionInterface
      */
     private $columns;
 
@@ -36,31 +41,24 @@ class Exporter
         $this->valueResolver = $valueResolver ?: new SimpleTypeColumnValueResolver();
     }
 
-    public function add(Column $column)
-    {
-        $this->columns->add($column);
-        return $this;
-    }
-
-    public function get($columnName)
-    {
-        return $this->columns->get($columnName);
-    }
-
-    public function has($columnName)
-    {
-        return $this->columns->has($columnName);
-    }
-
-    public function remove($columnName)
-    {
-        $this->columns->remove($columnName);
-    }
-
     public function setData($data)
     {
         $this->data = $data;
         return $this;
+    }
+
+    public function setColumns(ColumnCollectionInterface $columns)
+    {
+        $this->columns = $columns;
+        return $this;
+    }
+
+    /**
+     * @return ColumnCollectionInterface
+     */
+    public function getColumns()
+    {
+        return $this->columns;
     }
 
     /**
@@ -92,30 +90,47 @@ class Exporter
         $this->output->begin();
 
         foreach ($this->data as $idx => $a) {
-
-            $record = array();
-            foreach ($columns as $pos => $column) {
-                $options = $column->getOptions();
-                $columnType = $column->getType();
-
-                if ($columnType instanceof SimpleExporterTypeInterface) {
-                    $rawValue = $this->valueResolver->getValue($a, $column, $options);
-                    $value = $columnType->getValue($rawValue, $options);
-                } elseif ($columnType instanceof ComplexExporterTypeInterface) {
-                    $value = $columnType->getValue($a, $column->getName(), $options);
-                } else {
-                    throw new InvalidArgumentException('Column type must either implement SimpleExporterTypeInterface or ComplexExporterTypeInterface');
-                }
-
-                $record[$column->getName()] = $value;
-            }
-
+            $record = $this->processRow($columns, $a);
             $this->output->writeRecord($columns, $record);
         }
 
         $this->output->end();
         return $this;
     }
+
+    /**
+     * @param Column[] $sortedColumns
+     * @param $row
+     * @return array
+     * @throws InvalidArgumentException
+     */
+    private function processRow(array $sortedColumns, $row)
+    {
+        $record = array();
+
+        foreach ($sortedColumns as $pos => $column) {
+            $options = $column->getOptions();
+            $columnType = $column->getType();
+
+            if ($columnType instanceof SimpleExporterTypeInterface) { // assume column with child type are simple type for now
+                $rawValue = $this->valueResolver->getValue($row, $column, $options);
+                $value = $columnType->getValue($rawValue, $options);
+            } elseif ($columnType instanceof ComplexExporterTypeInterface) {
+                $value = $columnType->getValue($row, $column->getName(), $options);
+            } else {
+                throw new InvalidArgumentException('Column type must either implement SimpleExporterTypeInterface or ComplexExporterTypeInterface');
+            }
+
+            if ($column->hasChildren()) {
+                $record[$column->getName()] = $this->processRow($column->getSortedActiveColumns(), $value);
+            } else {
+                $record[$column->getName()] = $value;
+            }
+        }
+
+        return $record;
+    }
+
 
     public function getResult()
     {

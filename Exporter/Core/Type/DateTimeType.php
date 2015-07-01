@@ -1,8 +1,8 @@
 <?php
 
-namespace Sparkson\DataExporterBundle\Exporter\Type;
+namespace Sparkson\DataExporterBundle\Exporter\Core\Type;
 
-use Sparkson\DataExporterBundle\Exporter\AbstractSimpleType;
+use Sparkson\DataExporterBundle\Exporter\Type\AbstractSimpleType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DateTimeType extends AbstractSimpleType
@@ -19,6 +19,7 @@ class DateTimeType extends AbstractSimpleType
             'format' => 'Y-m-d H:i:s',
             'timezone' => null,
             'source_format' => null,
+            'compound' => false,
         ));
 
         $resolver->setAllowedTypes('timezone', array('null', '\DateTimeZone'));
