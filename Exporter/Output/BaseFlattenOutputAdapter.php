@@ -71,6 +71,7 @@ abstract class BaseFlattenOutputAdapter extends AbstractOutputAdapter
     }
 
     abstract protected function writeHeaderRow(array $columnLabels);
+
     abstract protected function writeRecordRow(array $columnLabels, array $record);
 
 }

@@ -24,7 +24,6 @@ abstract class AbstractOutputAdapter implements OutputInterface
      */
     protected function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-        ));
+        $resolver->setDefaults(array());
     }
 }

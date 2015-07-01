@@ -3,6 +3,7 @@
 namespace Sparkson\DataExporterBundle\Exporter\Exception;
 
 
-class InvalidOperationException extends \Exception {
+class InvalidOperationException extends \Exception
+{
 
 }

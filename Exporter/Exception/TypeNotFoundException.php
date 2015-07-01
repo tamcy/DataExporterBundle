@@ -3,6 +3,7 @@
 namespace Sparkson\DataExporterBundle\Exporter\Exception;
 
 
-class TypeNotFoundException extends \Exception {
+class TypeNotFoundException extends \Exception
+{
 
 }
