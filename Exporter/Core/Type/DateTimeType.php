@@ -5,8 +5,14 @@ namespace Sparkson\DataExporterBundle\Exporter\Core\Type;
 use Sparkson\DataExporterBundle\Exporter\Type\AbstractSimpleType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * A datetime field type.
+ *
+ * @author Tamcy <tamcyhk@outlook.com>
+ */
 class DateTimeType extends AbstractSimpleType
 {
+
     /**
      * {@inheritdoc}
      */
@@ -26,6 +32,9 @@ class DateTimeType extends AbstractSimpleType
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function processValue($value, $options)
     {
         if (!$value) {
@@ -43,6 +52,9 @@ class DateTimeType extends AbstractSimpleType
         return $value->format($options['format']);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
         return 'datetime';

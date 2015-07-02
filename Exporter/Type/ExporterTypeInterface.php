@@ -2,21 +2,44 @@
 
 namespace Sparkson\DataExporterBundle\Exporter\Type;
 
-
 use Sparkson\DataExporterBundle\Exporter\ExporterBuilder;
 use Sparkson\DataExporterBundle\Exporter\ValueResolver\ColumnValueResolverInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Interface for an exporter field type.
+ *
+ * @author Tamcy <tamcyhk@outlook.com>
+ */
 interface ExporterTypeInterface
 {
     public function setDefaultOptions(OptionsResolver $resolver);
 
-//    public function getValue($data, $fieldName, array $options);
-
+    /**
+     * Returns the name of this type.
+     *
+     * @return string
+     */
     public function getName();
 
+    /**
+     * Builds the exporter.
+     *
+     * Adds additional fields to the exporter.
+     *
+     * @param ExporterBuilder $builder The exporter builder
+     */
     public function buildExporter(ExporterBuilder $builder);
 
+    /**
+     * Transforms the field value to the one as defined in the types.
+     *
+     * @param ColumnValueResolverInterface $valueResolver
+     * @param mixed $data The source data
+     * @param string $fieldName The requested field name
+     * @param array $options The options
+     * @return mixed The transformed value
+     */
     public function getValue(ColumnValueResolverInterface $valueResolver, $data, $fieldName, array $options);
 
 }

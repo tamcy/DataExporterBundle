@@ -6,11 +6,19 @@ use Sparkson\DataExporterBundle\Exporter\ExporterBuilder;
 use Sparkson\DataExporterBundle\Exporter\ValueResolver\ColumnValueResolverInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * The abstract type class implemting ExporterTypeInterface.
+ *
+ * @author Tamcy <tamcyhk@outlook.com>
+ */
 abstract class AbstractType implements ExporterTypeInterface
 {
+
+    /**
+     * {@inheritdoc}
+     */
     public function buildExporter(ExporterBuilder $builder)
     {
-
     }
 
     /**
@@ -42,11 +50,17 @@ abstract class AbstractType implements ExporterTypeInterface
         $resolver->setAllowedTypes('filters', 'array');
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
         return 'exporter';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getValue(ColumnValueResolverInterface $valueResolver, $data, $fieldName, array $options)
     {
         $propertyPath = $options['property_path'] ?: $fieldName;
