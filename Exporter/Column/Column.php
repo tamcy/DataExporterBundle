@@ -5,29 +5,44 @@ namespace Sparkson\DataExporterBundle\Exporter\Column;
 use Sparkson\DataExporterBundle\Exporter\Type\ExporterTypeInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * A column.
+ *
+ * @author Tamcy <tamcyhk@outlook.com>
+ */
 class Column extends AbstractColumnContainer implements ColumnInterface
 {
     /**
+     * The column name, which is unique in the column set.
+     *
      * @var string
      */
     private $name;
 
     /**
+     * The value type of this column.
+     *
      * @var ExporterTypeInterface
      */
     private $type;
 
     /**
+     * Column and type options
+     *
      * @var array
      */
     private $options;
 
     /**
+     * Whether this column is enabled.
+     *
      * @var boolean
      */
     private $enabled = true;
 
     /**
+     * The position of this column in the column set.
+     *
      * @var int
      */
     private $position;
@@ -44,13 +59,16 @@ class Column extends AbstractColumnContainer implements ColumnInterface
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getLabel()
     {
         if ($this->options['label']) {
@@ -61,7 +79,7 @@ class Column extends AbstractColumnContainer implements ColumnInterface
     }
 
     /**
-     * @return ExporterTypeInterface
+     * {@inheritdoc}
      */
     public function getType()
     {
@@ -69,7 +87,7 @@ class Column extends AbstractColumnContainer implements ColumnInterface
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getOptions()
     {
@@ -77,7 +95,7 @@ class Column extends AbstractColumnContainer implements ColumnInterface
     }
 
     /**
-     * @param array $options
+     * {@inheritdoc}
      */
     public function setOptions($options)
     {
@@ -86,7 +104,7 @@ class Column extends AbstractColumnContainer implements ColumnInterface
     }
 
     /**
-     * @return boolean
+     * {@inheritdoc}
      */
     public function isEnabled()
     {
@@ -94,7 +112,7 @@ class Column extends AbstractColumnContainer implements ColumnInterface
     }
 
     /**
-     * @param boolean $enabled
+     * {@inheritdoc}
      */
     public function setEnabled($enabled)
     {
@@ -103,7 +121,7 @@ class Column extends AbstractColumnContainer implements ColumnInterface
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
     public function getPosition()
     {
@@ -111,7 +129,7 @@ class Column extends AbstractColumnContainer implements ColumnInterface
     }
 
     /**
-     * @param int $position
+     * {@inheritdoc}
      */
     public function setPosition($position)
     {

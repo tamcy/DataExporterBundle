@@ -5,17 +5,31 @@ namespace Sparkson\DataExporterBundle\Exporter\Column;
 
 use Sparkson\DataExporterBundle\Exporter\Exception\InvalidOperationException;
 
+/**
+ * The base column set class.
+ *
+ * @author Tamcy <tamcyhk@outlook.com>
+ */
 abstract class AbstractColumnContainer implements ColumnCollectionInterface
 {
+    /**
+     * @var Column[] Array of columns
+     */
     protected $children;
 
     /**
-     * @var Column[]
+     * @var Column[] Array of built columns
      */
     protected $sortedColumns;
 
+    /**
+     * @var bool True if the column set is built for export and locked
+     */
     protected $locked = false;
 
+    /**
+     * {@inheritdoc}
+     */
     public function setChildren(array $children)
     {
         $this->children = $children;
@@ -29,18 +43,24 @@ abstract class AbstractColumnContainer implements ColumnCollectionInterface
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getChildren()
     {
         return $this->children;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function hasChildren()
     {
         return $this->children && count($this->children) > 0;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function addChild(ColumnInterface $column)
     {
         $this->assertNotLocked();
@@ -54,6 +74,9 @@ abstract class AbstractColumnContainer implements ColumnCollectionInterface
         $this->children[$column->getName()] = $column;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getChild($columnName)
     {
         if (isset($this->children[$columnName])) {
@@ -63,11 +86,17 @@ abstract class AbstractColumnContainer implements ColumnCollectionInterface
         throw new \Exception('Column name not found!');
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function hasChild($columnName)
     {
         return isset($this->children[$columnName]);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function removeChild($columnName)
     {
         if ($this->hasChild($columnName)) {
@@ -75,6 +104,19 @@ abstract class AbstractColumnContainer implements ColumnCollectionInterface
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function setColumnOrders(array $columnNames)
+    {
+        foreach ($columnNames as $position => $columnName) {
+            $this->getChild($columnName)->setPosition($position + 1);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function build()
     {
         if ($this->hasChildren()) {
@@ -95,7 +137,7 @@ abstract class AbstractColumnContainer implements ColumnCollectionInterface
     }
 
     /**
-     * @return Column[]
+     * {@inheritdoc}
      */
     public function getBuiltColumns()
     {
@@ -134,10 +176,12 @@ abstract class AbstractColumnContainer implements ColumnCollectionInterface
         $this->removeChild($offset);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function count()
     {
         return count($this->children);
     }
-
 
 }
