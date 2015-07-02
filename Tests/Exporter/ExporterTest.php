@@ -4,7 +4,6 @@ namespace Sparkson\DataExporterBundle\Tests\Exporter;
 
 use Sparkson\DataExporterBundle\Exporter\Column\Column;
 use Sparkson\DataExporterBundle\Exporter\Column\ColumnSet;
-use Sparkson\DataExporterBundle\Exporter\Core\Type\DummyType;
 use Sparkson\DataExporterBundle\Exporter\Core\Type\RawType;
 use Sparkson\DataExporterBundle\Exporter\Core\Type\StringType;
 use Sparkson\DataExporterBundle\Exporter\Exporter;
@@ -62,4 +61,26 @@ Foo,Chan,B,12
 Bar,Wong,A,14
 ', $result);
     }
+
+    public function testNonDefaultColumnOrders()
+    {
+        $columns = new ColumnSet();
+        $columns->addChild(new Column('firstName', new StringType(), array('property_path' => '[firstName]')));
+        $columns->addChild(new Column('lastName', new StringType(), array('property_path' => '[lastName]')));
+        $columns->setColumnOrders(array('lastName', 'firstName'));
+
+        $exporter = new Exporter();
+        $exporter
+            ->setColumns($columns)
+            ->setOutput(new CSVAdapter())
+            ->setData($this->dataSet1)
+            ->execute();
+        $result = $exporter->getResult();
+
+        $this->assertEquals('"Last Name","First Name"
+Chan,Foo
+Wong,Bar
+', $result);
+    }
+
 }
