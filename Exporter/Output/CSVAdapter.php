@@ -5,12 +5,20 @@ namespace Sparkson\DataExporterBundle\Exporter\Output;
 use Sparkson\DataExporterBundle\Exporter\Column\Column;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * CSV output adapter.
+ *
+ * @author Tamcy <tamcyhk@outlook.com>
+ */
 class CSVAdapter extends BaseFlattenOutputAdapter
 {
-    private $handle;
+    protected $handle;
 
-    private $data;
+    protected $data;
 
+    /**
+     * {@inheritdoc}
+     */
     protected function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
@@ -18,7 +26,6 @@ class CSVAdapter extends BaseFlattenOutputAdapter
         $resolver->setDefaults(array(
             'output' => 'php://temp/maxmemory:5242880',
             'keep_result' => true,
-            'header' => true,
             'delimiter' => ',',
             'enclosure' => '"',
             'escape_char' => '\\',
@@ -27,6 +34,9 @@ class CSVAdapter extends BaseFlattenOutputAdapter
         $resolver->setAllowedTypes('keep_result', 'bool');
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function begin()
     {
         parent::begin();
@@ -34,11 +44,17 @@ class CSVAdapter extends BaseFlattenOutputAdapter
         $this->data = null;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function writeHeaderRow(array $columnLabels)
     {
         fputcsv($this->handle, $columnLabels, $this->options['delimiter'], $this->options['enclosure'], $this->options['escape_char']);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function writeRecordRow(array $columnLabels, array $record)
     {
         $fields = array();
@@ -51,6 +67,9 @@ class CSVAdapter extends BaseFlattenOutputAdapter
         fputcsv($this->handle, $fields, $this->options['delimiter'], $this->options['enclosure'], $this->options['escape_char']);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function end()
     {
         if ($this->options['keep_result']) {
@@ -61,6 +80,9 @@ class CSVAdapter extends BaseFlattenOutputAdapter
         fclose($this->handle);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getResult()
     {
         return $this->data;

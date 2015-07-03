@@ -3,13 +3,18 @@
 namespace Sparkson\DataExporterBundle\Exporter;
 
 use Sparkson\DataExporterBundle\Exporter\Column\Column;
-use Sparkson\DataExporterBundle\Exporter\Column\ColumnSet;
 use Sparkson\DataExporterBundle\Exporter\Column\ColumnCollectionInterface;
+use Sparkson\DataExporterBundle\Exporter\Column\ColumnSet;
 use Sparkson\DataExporterBundle\Exporter\Exception\InvalidArgumentException;
 use Sparkson\DataExporterBundle\Exporter\Output\OutputInterface;
 use Sparkson\DataExporterBundle\Exporter\ValueResolver\ColumnValueResolverInterface;
 use Sparkson\DataExporterBundle\Exporter\ValueResolver\SimpleTypeColumnValueResolver;
 
+/**
+ * The Exporter class.
+ *
+ * Normally this class is not created manually but built via ExporterBuilder::getExporter().
+ */
 class Exporter
 {
     /**
@@ -123,7 +128,6 @@ class Exporter
 
         return $record;
     }
-
 
     public function getResult()
     {

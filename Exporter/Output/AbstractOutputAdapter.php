@@ -4,6 +4,13 @@ namespace Sparkson\DataExporterBundle\Exporter\Output;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Abstract output adapter.
+ *
+ * This class provides configuration options to the descending classes.
+ *
+ * @author Tamcy <tamcyhk@outlook.com>
+ */
 abstract class AbstractOutputAdapter implements OutputInterface
 {
     protected $options;

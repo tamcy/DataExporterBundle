@@ -2,7 +2,6 @@
 
 namespace Sparkson\DataExporterBundle\Exporter;
 
-
 use Sparkson\DataExporterBundle\Exporter\Column\Column;
 use Sparkson\DataExporterBundle\Exporter\Column\ColumnSet;
 use Sparkson\DataExporterBundle\Exporter\Exception\InvalidOperationException;
@@ -10,6 +9,12 @@ use Sparkson\DataExporterBundle\Exporter\Type\ExporterTypeInterface;
 use Sparkson\DataExporterBundle\Exporter\Type\TypeResolverInterface;
 use Sparkson\DataExporterBundle\Exporter\ValueResolver\ColumnValueResolverInterface;
 
+/**
+ * The exporter builder.
+ *
+ * Normally you don't initialize this class by yourself, but create one via
+ * ExporterFactory::createBuilder() or ExporterFactory::createExporter().
+ */
 class ExporterBuilder
 {
     /**

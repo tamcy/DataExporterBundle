@@ -4,29 +4,37 @@ namespace Sparkson\DataExporterBundle\Exporter\Output;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * PHPExcel output adapter.
+ *
+ * @author Tamcy <tamcyhk@outlook.com>
+ */
 class PHPExcelAdapter extends BaseFlattenOutputAdapter
 {
     /**
      * @var \PHPExcel_Writer_IWriter
      */
-    private $writer;
+    protected $writer;
 
     /**
      * @var \PHPExcel
      */
-    private $excel;
+    protected $excel;
 
     /**
      * @var \PHPExcel_Worksheet
      */
-    private $worksheet;
+    protected $worksheet;
 
-    private $row;
+    protected $row;
 
-    private $data;
+    protected $data;
 
-    private $headerDrawn = false;
+    protected $headerDrawn = false;
 
+    /**
+     * {@inheritdoc}
+     */
     protected function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
@@ -42,7 +50,7 @@ class PHPExcelAdapter extends BaseFlattenOutputAdapter
         $resolver->setAllowedTypes('writer', array('string'));
     }
 
-    private function initializeWriter()
+    protected function initializeWriter()
     {
         $cls = $this->options['writer'];
         if (!class_exists($cls)) {
@@ -60,7 +68,7 @@ class PHPExcelAdapter extends BaseFlattenOutputAdapter
         }
     }
 
-    private function guessCellType($value)
+    protected function guessCellType($value)
     {
         if (is_null($value)) {
             return \PHPExcel_Cell_DataType::TYPE_NULL;
@@ -75,6 +83,9 @@ class PHPExcelAdapter extends BaseFlattenOutputAdapter
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function begin()
     {
         parent::begin();
@@ -90,6 +101,9 @@ class PHPExcelAdapter extends BaseFlattenOutputAdapter
         $this->worksheet = $this->excel->getActiveSheet();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function writeHeaderRow(array $columnLabels)
     {
         foreach ($columnLabels as $idx => $label) {
@@ -105,6 +119,9 @@ class PHPExcelAdapter extends BaseFlattenOutputAdapter
         $this->headerDrawn = true;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function writeRecordRow(array $columnLabels, array $record)
     {
         $col = 0;
@@ -124,6 +141,9 @@ class PHPExcelAdapter extends BaseFlattenOutputAdapter
         $this->row++;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function end()
     {
         $this->initializeWriter();
@@ -134,6 +154,9 @@ class PHPExcelAdapter extends BaseFlattenOutputAdapter
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getResult()
     {
         return $this->data;
