@@ -7,7 +7,7 @@ use Sparkson\DataExporterBundle\Exporter\Column\ColumnSet;
 use Sparkson\DataExporterBundle\Exporter\Exception\InvalidOperationException;
 use Sparkson\DataExporterBundle\Exporter\Type\ExporterTypeInterface;
 use Sparkson\DataExporterBundle\Exporter\Type\TypeResolverInterface;
-use Sparkson\DataExporterBundle\Exporter\ValueResolver\ColumnValueResolverInterface;
+use Sparkson\DataExporterBundle\Exporter\ValueResolver\ValueResolverInterface;
 
 /**
  * The exporter builder.
@@ -23,7 +23,7 @@ class ExporterBuilder
     protected $typeResolver;
 
     /**
-     * @var ColumnValueResolverInterface
+     * @var ValueResolverInterface
      */
     protected $valueResolver;
 
@@ -43,11 +43,11 @@ class ExporterBuilder
      * Class constructor.
      *
      * @param TypeResolverInterface $typeResolver
-     * @param ColumnValueResolverInterface $valueResolver
+     * @param ValueResolverInterface $valueResolver
      * @param string|ExporterTypeInterface $rootType
      */
     public function __construct(TypeResolverInterface $typeResolver,
-                                ColumnValueResolverInterface $valueResolver,
+                                ValueResolverInterface $valueResolver,
                                 $rootType = null)
     {
         $this->fields = array();
@@ -85,10 +85,10 @@ class ExporterBuilder
     /**
      * Sets the value resolver to be used.
      *
-     * @param ColumnValueResolverInterface $resolver
+     * @param ValueResolverInterface $resolver
      * @return $this
      */
-    public function setValueResolver(ColumnValueResolverInterface $resolver)
+    public function setValueResolver(ValueResolverInterface $resolver)
     {
         $this->valueResolver = $resolver;
         return $this;

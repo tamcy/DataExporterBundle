@@ -7,8 +7,8 @@ use Sparkson\DataExporterBundle\Exporter\Column\ColumnCollectionInterface;
 use Sparkson\DataExporterBundle\Exporter\Column\ColumnSet;
 use Sparkson\DataExporterBundle\Exporter\Exception\InvalidArgumentException;
 use Sparkson\DataExporterBundle\Exporter\Output\OutputInterface;
-use Sparkson\DataExporterBundle\Exporter\ValueResolver\ColumnValueResolverInterface;
-use Sparkson\DataExporterBundle\Exporter\ValueResolver\SimpleTypeColumnValueResolver;
+use Sparkson\DataExporterBundle\Exporter\ValueResolver\ValueResolverInterface;
+use Sparkson\DataExporterBundle\Exporter\ValueResolver\DefaultValueResolver;
 
 /**
  * The Exporter class.
@@ -33,19 +33,19 @@ class Exporter
     private $dataSet;
 
     /**
-     * @var ColumnValueResolverInterface
+     * @var ValueResolverInterface
      */
     private $valueResolver;
 
     /**
      * Class constructor.
      *
-     * @param ColumnValueResolverInterface $valueResolver
+     * @param ValueResolverInterface $valueResolver
      */
-    public function __construct(ColumnValueResolverInterface $valueResolver = null)
+    public function __construct(ValueResolverInterface $valueResolver = null)
     {
         $this->columns = new ColumnSet();
-        $this->valueResolver = $valueResolver ?: new SimpleTypeColumnValueResolver();
+        $this->valueResolver = $valueResolver ?: new DefaultValueResolver();
     }
 
     /**

@@ -4,7 +4,7 @@ namespace Sparkson\DataExporterBundle\Exporter;
 
 use Sparkson\DataExporterBundle\Exporter\Type\ExporterTypeInterface;
 use Sparkson\DataExporterBundle\Exporter\Type\TypeResolverInterface;
-use Sparkson\DataExporterBundle\Exporter\ValueResolver\ColumnValueResolverInterface;
+use Sparkson\DataExporterBundle\Exporter\ValueResolver\ValueResolverInterface;
 
 /**
  * Exporter factory class.
@@ -16,7 +16,7 @@ class ExporterFactory
      */
     private $typeResolver;
     /**
-     * @var ColumnValueResolverInterface
+     * @var ValueResolverInterface
      */
     private $valueResolver;
 
@@ -24,10 +24,10 @@ class ExporterFactory
      * Class constructor.
      *
      * @param TypeResolverInterface $typeResolver
-     * @param ColumnValueResolverInterface $valueResolver
+     * @param ValueResolverInterface $valueResolver
      */
     public function __construct(TypeResolverInterface $typeResolver,
-                                ColumnValueResolverInterface $valueResolver)
+                                ValueResolverInterface $valueResolver)
     {
         $this->typeResolver = $typeResolver;
         $this->valueResolver = $valueResolver;

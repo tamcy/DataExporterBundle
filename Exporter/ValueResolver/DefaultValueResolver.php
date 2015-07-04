@@ -8,8 +8,10 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
  * The default value resolver.
+ *
+ * This value resolver uses Symfony's property accessor component to retrieve property value from the $data variable.
  */
-class SimpleTypeColumnValueResolver implements ColumnValueResolverInterface
+class DefaultValueResolver implements ValueResolverInterface
 {
     /**
      * @var PropertyAccessorInterface

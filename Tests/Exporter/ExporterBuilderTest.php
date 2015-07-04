@@ -7,7 +7,7 @@ use Sparkson\DataExporterBundle\Exporter\Core\Type\StringType;
 use Sparkson\DataExporterBundle\Exporter\ExporterBuilder;
 use Sparkson\DataExporterBundle\Exporter\Output\CSVAdapter;
 use Sparkson\DataExporterBundle\Exporter\Type\TypeRegistry;
-use Sparkson\DataExporterBundle\Exporter\ValueResolver\SimpleTypeColumnValueResolver;
+use Sparkson\DataExporterBundle\Exporter\ValueResolver\DefaultValueResolver;
 use Sparkson\DataExporterBundle\Tests\Exporter\Fixtures\AddressType;
 use Sparkson\DataExporterBundle\Tests\Exporter\Fixtures\ProfileType;
 
@@ -27,7 +27,7 @@ class ExporterBuilderTest extends \PHPUnit_Framework_TestCase
         $this->typeRegistry->addType(new StringType());
         $this->typeRegistry->addType(new AddressType());
         $this->typeRegistry->addType(new ProfileType());
-        $this->valueResolver = new SimpleTypeColumnValueResolver();
+        $this->valueResolver = new DefaultValueResolver();
 
         $record1 = new \stdClass();
         $record1->firstName = 'Foo';

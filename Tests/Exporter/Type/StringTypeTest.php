@@ -3,7 +3,7 @@
 namespace Sparkson\DataExporterBundle\Tests\Exporter\Type;
 
 use Sparkson\DataExporterBundle\Exporter\Core\Type\StringType;
-use Sparkson\DataExporterBundle\Exporter\ValueResolver\SimpleTypeColumnValueResolver;
+use Sparkson\DataExporterBundle\Exporter\ValueResolver\DefaultValueResolver;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class StringTypeTest extends \PHPUnit_Framework_TestCase
@@ -12,7 +12,7 @@ class StringTypeTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->valueResolver = new SimpleTypeColumnValueResolver();
+        $this->valueResolver = new DefaultValueResolver();
     }
 
     public function testValueReturnedCorrectly()

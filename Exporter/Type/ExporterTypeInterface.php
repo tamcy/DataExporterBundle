@@ -3,7 +3,7 @@
 namespace Sparkson\DataExporterBundle\Exporter\Type;
 
 use Sparkson\DataExporterBundle\Exporter\ExporterBuilder;
-use Sparkson\DataExporterBundle\Exporter\ValueResolver\ColumnValueResolverInterface;
+use Sparkson\DataExporterBundle\Exporter\ValueResolver\ValueResolverInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -34,12 +34,12 @@ interface ExporterTypeInterface
     /**
      * Transforms the field value to the one as defined in the types.
      *
-     * @param ColumnValueResolverInterface $valueResolver
+     * @param ValueResolverInterface $valueResolver
      * @param mixed $data The source data
      * @param string $fieldName The requested field name
      * @param array $options The options
      * @return mixed The transformed value
      */
-    public function getValue(ColumnValueResolverInterface $valueResolver, $data, $fieldName, array $options);
+    public function getValue(ValueResolverInterface $valueResolver, $data, $fieldName, array $options);
 
 }

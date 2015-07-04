@@ -3,7 +3,7 @@
 namespace Sparkson\DataExporterBundle\Exporter\Type;
 
 use Sparkson\DataExporterBundle\Exporter\ExporterBuilder;
-use Sparkson\DataExporterBundle\Exporter\ValueResolver\ColumnValueResolverInterface;
+use Sparkson\DataExporterBundle\Exporter\ValueResolver\ValueResolverInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -61,7 +61,7 @@ abstract class AbstractType implements ExporterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getValue(ColumnValueResolverInterface $valueResolver, $data, $fieldName, array $options)
+    public function getValue(ValueResolverInterface $valueResolver, $data, $fieldName, array $options)
     {
         $propertyPath = $options['property_path'] ?: $fieldName;
 
