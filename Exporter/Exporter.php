@@ -37,19 +37,39 @@ class Exporter
      */
     private $valueResolver;
 
-
+    /**
+     * Class constructor.
+     *
+     * @param ColumnValueResolverInterface $valueResolver
+     */
     public function __construct(ColumnValueResolverInterface $valueResolver = null)
     {
         $this->columns = new ColumnSet();
         $this->valueResolver = $valueResolver ?: new SimpleTypeColumnValueResolver();
     }
 
+    /**
+     * Assigns a data set to this exporter.
+     *
+     * The data set should be an array of a traversable instance (iterable with foreach()),
+     * with each element having a structure accessible by the column value resolver.
+     * Normally this would be an array of objects.
+     *
+     * @param mixed $dataSet
+     * @return $this
+     */
     public function setDataSet($dataSet)
     {
         $this->dataSet = $dataSet;
         return $this;
     }
 
+    /**
+     * Sets the column set.
+     *
+     * @param ColumnCollectionInterface $columns
+     * @return $this
+     */
     public function setColumns(ColumnCollectionInterface $columns)
     {
         $this->columns = $columns;
@@ -65,14 +85,6 @@ class Exporter
     }
 
     /**
-     * @return OutputInterface
-     */
-    public function getOutput()
-    {
-        return $this->output;
-    }
-
-    /**
      * @param OutputInterface $output
      * @return $this
      */
@@ -82,6 +94,20 @@ class Exporter
         return $this;
     }
 
+    /**
+     * @return OutputInterface
+     */
+    public function getOutput()
+    {
+        return $this->output;
+    }
+
+    /**
+     * Runs the export process.
+     *
+     * @return $this
+     * @throws InvalidArgumentException
+     */
     public function execute()
     {
         $this->columns->build();
@@ -129,6 +155,13 @@ class Exporter
         return $record;
     }
 
+    /**
+     * Returns the exported result.
+     *
+     * This just proxies to the output adapter's getResult() method.
+     *
+     * @return string
+     */
     public function getResult()
     {
         return $this->output->getResult();

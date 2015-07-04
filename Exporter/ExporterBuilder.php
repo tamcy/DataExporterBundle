@@ -20,25 +20,32 @@ class ExporterBuilder
     /**
      * @var TypeResolverInterface
      */
-    private $typeResolver;
+    protected $typeResolver;
 
     /**
      * @var ColumnValueResolverInterface
      */
-    private $valueResolver;
+    protected $valueResolver;
 
     /**
      * @var array
      */
-    private $fields;
+    protected $fields;
 
     /**
      * @var ExporterTypeInterface
      */
-    private $rootType = null;
+    protected $rootType = null;
 
-    private $locked = false;
+    protected $locked = false;
 
+    /**
+     * Class constructor.
+     *
+     * @param TypeResolverInterface $typeResolver
+     * @param ColumnValueResolverInterface $valueResolver
+     * @param string|ExporterTypeInterface $rootType
+     */
     public function __construct(TypeResolverInterface $typeResolver,
                                 ColumnValueResolverInterface $valueResolver,
                                 $rootType = null)
@@ -50,6 +57,18 @@ class ExporterBuilder
         $this->locked = ($rootType !== null);
     }
 
+    /**
+     * Adds a field to the builder.
+     *
+     * If a type name is provided, the type will be retrieved from the type registry.
+     * Field type will be wrapped by a column instance.
+     *
+     * @param string $name The name of the field/column, which should be unique at the same level
+     * @param string|ExporterTypeInterface $type The exporter type name or instance
+     * @param array $options Field options
+     * @return $this
+     * @throws InvalidOperationException When a root type is defined
+     */
     public function add($name, $type = null, array $options = array())
     {
         if ($this->locked) {
@@ -63,13 +82,19 @@ class ExporterBuilder
         return $this;
     }
 
+    /**
+     * Sets the value resolver to be used.
+     *
+     * @param ColumnValueResolverInterface $resolver
+     * @return $this
+     */
     public function setValueResolver(ColumnValueResolverInterface $resolver)
     {
         $this->valueResolver = $resolver;
         return $this;
     }
 
-    private function getResolveColumns()
+    protected function getResolveColumns()
     {
         $columns = new ColumnSet();
 
@@ -103,6 +128,11 @@ class ExporterBuilder
         return $columns;
     }
 
+    /**
+     * Builds and returns the exporter instance.
+     *
+     * @return Exporter
+     */
     public function getExporter()
     {
         $instance = new Exporter($this->valueResolver);

@@ -6,6 +6,9 @@ use Sparkson\DataExporterBundle\Exporter\ValueResolver\Filter\FilterInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
+/**
+ * The default value resolver.
+ */
 class SimpleTypeColumnValueResolver implements ColumnValueResolverInterface
 {
     /**
@@ -18,6 +21,9 @@ class SimpleTypeColumnValueResolver implements ColumnValueResolverInterface
         $this->propertyAccessor = $propertyAccessor ?: PropertyAccess::createPropertyAccessor();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getValue($data, $propertyPath, $options)
     {
         $rawValue = $this->propertyAccessor->getValue($data, $propertyPath);
