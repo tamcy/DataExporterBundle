@@ -3,7 +3,6 @@
 namespace Sparkson\DataExporterBundle\Tests\Exporter\Fixtures;
 
 use Sparkson\DataExporterBundle\Exporter\ExporterBuilder;
-use Sparkson\DataExporterBundle\Exporter\Type\AbstractSimpleType;
 use Sparkson\DataExporterBundle\Exporter\Type\AbstractType;
 
 class ProfileType extends AbstractType
