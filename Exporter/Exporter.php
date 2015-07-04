@@ -30,7 +30,7 @@ class Exporter
     /**
      * @var array
      */
-    private $data;
+    private $dataSet;
 
     /**
      * @var ColumnValueResolverInterface
@@ -44,9 +44,9 @@ class Exporter
         $this->valueResolver = $valueResolver ?: new SimpleTypeColumnValueResolver();
     }
 
-    public function setData($data)
+    public function setDataSet($dataSet)
     {
-        $this->data = $data;
+        $this->dataSet = $dataSet;
         return $this;
     }
 
@@ -88,13 +88,13 @@ class Exporter
 
         $columns = $this->columns->getBuiltColumns();
 
-        if (!is_array($this->data) && !$this->data instanceof \Traversable) {
+        if (!is_array($this->dataSet) && !$this->dataSet instanceof \Traversable) {
             throw new InvalidArgumentException('The supplied data is not traversable.');
         }
 
         $this->output->begin();
 
-        foreach ($this->data as $idx => $a) {
+        foreach ($this->dataSet as $idx => $a) {
             $record = $this->processRow($columns, $a);
             $this->output->writeRecord($columns, $record);
         }

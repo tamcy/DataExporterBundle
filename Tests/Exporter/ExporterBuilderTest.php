@@ -90,7 +90,7 @@ class ExporterBuilderTest extends \PHPUnit_Framework_TestCase
 
         $exporter
             ->setOutput(new CSVAdapter())
-            ->setData($this->dataSet1)
+            ->setDataSet($this->dataSet1)
             ->execute();
         $result = $exporter->getResult();
         $this->assertEquals('"First Name","Last Name",Room,Floor,Block

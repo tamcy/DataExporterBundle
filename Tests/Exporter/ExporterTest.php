@@ -27,7 +27,7 @@ class ExporterTest extends \PHPUnit_Framework_TestCase
         $exporter
             ->setColumns($columns)
             ->setOutput(new CSVAdapter())
-            ->setData($this->dataSet1)
+            ->setDataSet($this->dataSet1)
             ->execute();
         $result = $exporter->getResult();
 
@@ -52,7 +52,7 @@ Bar,Wong
         $exporter
             ->setColumns($columns)
             ->setOutput(new CSVAdapter())
-            ->setData($this->dataSet1)
+            ->setDataSet($this->dataSet1)
             ->execute();
             $result = $exporter->getResult();
 
@@ -73,7 +73,7 @@ Bar,Wong,A,14
         $exporter
             ->setColumns($columns)
             ->setOutput(new CSVAdapter())
-            ->setData($this->dataSet1)
+            ->setDataSet($this->dataSet1)
             ->execute();
         $result = $exporter->getResult();
 
