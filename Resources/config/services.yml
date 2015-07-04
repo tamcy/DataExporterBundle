@@ -1,8 +1,4 @@
-parameters:
-#    twig.form.engine.class: AppBundle\Form\Twig\TwigRendererEngine
-
 services:
-
     sparkson.data_exporter.factory:
         class: Sparkson\DataExporterBundle\Exporter\ExporterFactory
         arguments:
@@ -10,7 +6,7 @@ services:
             - @sparkson.data_exporter.default_column_resolver
 
     sparkson.data_exporter.type_registry:
-        class: Sparkson\DataExporterBundle\Exporter\TypeRegistry
+        class: Sparkson\DataExporterBundle\Exporter\Type\TypeRegistry
 
     sparkson.data_exporter.default_column_resolver:
         class: Sparkson\DataExporterBundle\Exporter\ValueResolver\DefaultValueResolver
@@ -18,31 +14,36 @@ services:
     # Column types
 
     sparkson.data_exporter.type.string:
-        class: Sparkson\DataExporterBundle\Exporter\Type\StringType
+        class: Sparkson\DataExporterBundle\Exporter\Core\Type\StringType
         tags:
             -  { name: sparkson.data_exporter.type }
 
     sparkson.data_exporter.type.number:
-        class: Sparkson\DataExporterBundle\Exporter\Type\NumberType
+        class: Sparkson\DataExporterBundle\Exporter\Core\Type\NumberType
         tags:
             -  { name: sparkson.data_exporter.type }
 
     sparkson.data_exporter.type.map:
-        class: Sparkson\DataExporterBundle\Exporter\Type\MapType
+        class: Sparkson\DataExporterBundle\Exporter\Core\Type\MapType
         tags:
             -  { name: sparkson.data_exporter.type }
 
     sparkson.data_exporter.type.datetime:
-        class: Sparkson\DataExporterBundle\Exporter\Type\DateTimeType
+        class: Sparkson\DataExporterBundle\Exporter\Core\Type\DateTimeType
         tags:
             -  { name: sparkson.data_exporter.type }
 
     sparkson.data_exporter.type.callback:
-        class: Sparkson\DataExporterBundle\Exporter\Type\CallbackType
+        class: Sparkson\DataExporterBundle\Exporter\Core\Type\CallbackType
         tags:
             -  { name: sparkson.data_exporter.type }
 
     sparkson.data_exporter.type.boolean:
-        class: Sparkson\DataExporterBundle\Exporter\Type\BooleanType
+        class: Sparkson\DataExporterBundle\Exporter\Core\Type\BooleanType
+        tags:
+            -  { name: sparkson.data_exporter.type }
+
+    sparkson.data_exporter.type.raw:
+        class: Sparkson\DataExporterBundle\Exporter\Core\Type\RawType
         tags:
             -  { name: sparkson.data_exporter.type }
