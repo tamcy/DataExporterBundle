@@ -5,11 +5,15 @@ namespace Sparkson\DataExporterBundle\Tests\Exporter;
 
 use Sparkson\DataExporterBundle\Exporter\Core\Type\StringType;
 use Sparkson\DataExporterBundle\Exporter\ExporterBuilder;
+use Sparkson\DataExporterBundle\Exporter\ExporterFactory;
 use Sparkson\DataExporterBundle\Exporter\Output\CSVAdapter;
 use Sparkson\DataExporterBundle\Exporter\Type\TypeRegistry;
 use Sparkson\DataExporterBundle\Exporter\ValueResolver\DefaultValueResolver;
 use Sparkson\DataExporterBundle\Tests\Exporter\Fixtures\AddressType;
 use Sparkson\DataExporterBundle\Tests\Exporter\Fixtures\ProfileType;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 class ExporterBuilderTest extends \PHPUnit_Framework_TestCase
 {
@@ -96,7 +100,38 @@ class ExporterBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('"First Name","Last Name",Room,Floor,Block
 Foo,Chan,B,12,7
 ', $result);
+    }
 
+    public function testAccessingBuilderFromServiceContainer()
+    {
+        $container = new ContainerBuilder();
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../../Resources/config'));
+        $loader->load('services.yml');
+
+        /** @var TypeRegistry $typeRegistry */
+        $typeRegistry = $container->get('sparkson.data_exporter.type_registry');
+
+        $taggedServices = $container->findTaggedServiceIds('sparkson.data_exporter.type');
+        foreach ($taggedServices as $id => $tags) {
+            $typeRegistry->addType($container->get($id));
+        }
+
+        /** @var ExporterFactory $exporterFactory */
+        $exporterFactory = $container->get('sparkson.data_exporter.factory');
+        $exporter = $exporterFactory->createBuilder()
+            ->add('firstName', 'string')
+            ->add('lastName', 'string')
+            ->getExporter();
+
+        $result = $exporter
+            ->setOutput(new CSVAdapter())
+            ->setDataSet($this->dataSet1)
+            ->execute()
+            ->getResult();
+
+        $this->assertEquals('"First Name","Last Name"
+Foo,Chan
+', $result);
     }
 
 }
