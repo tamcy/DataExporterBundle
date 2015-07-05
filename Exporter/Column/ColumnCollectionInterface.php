@@ -66,9 +66,9 @@ interface ColumnCollectionInterface extends \ArrayAccess, \Countable
     /**
      * Builds the column set.
      *
-     * This method will build the column set array ready for export use. The resulting column set
-     * array will contain only enabled columns, sorted by their assigned positions. The column set
-     * will be read-only after this method is run.
+     * This method will build the column set array ready for export use. The resulting column set array will contain
+     * only enabled columns, sorted by their assigned positions. The column set will be read-only after this method is
+     * run.
      */
     public function build();
 
@@ -85,10 +85,14 @@ interface ColumnCollectionInterface extends \ArrayAccess, \Countable
      *
      * This is a helper method so that you don't need to write a bunch of
      * $columnSet->getChild('columnName')->setPosition(...).
+     * When $disableOtherColumns is true, columns not specified in $columnNames will be disabled, so that they won't
+     * show up in the exported document.
+     * Note: columns specified in $columnNames will NOT be enabled explicitly, even when $disableOtherColumns is true.
      *
      * @param array $columnNames
+     * @param bool $disableOtherColumns
      */
-    public function setColumnOrders(array $columnNames);
+    public function setColumnOrders(array $columnNames, $disableOtherColumns = false);
 
 
 }

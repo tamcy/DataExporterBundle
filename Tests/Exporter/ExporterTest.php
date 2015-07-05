@@ -13,8 +13,8 @@ class ExporterTest extends \PHPUnit_Framework_TestCase
 {
 
     private $dataSet1 = array(
-        array('firstName' => 'Foo', 'lastName' => 'Chan', 'address' => ['room' => 'B', 'floor' => '12']),
-        array('firstName' => 'Bar', 'lastName' => 'Wong', 'address' => ['room' => 'A', 'floor' => '14']),
+        array('firstName' => 'Foo', 'lastName' => 'Chan', 'age' => 10, 'address' => ['room' => 'B', 'floor' => '12']),
+        array('firstName' => 'Bar', 'lastName' => 'Wong', 'age' => 15, 'address' => ['room' => 'A', 'floor' => '14']),
     );
 
     public function testSimpleStructure()
@@ -80,6 +80,28 @@ Bar,Wong,A,14
         $this->assertEquals('"Last Name","First Name"
 Chan,Foo
 Wong,Bar
+', $result);
+    }
+
+    public function testNonDefaultColumnOrdersWithDisabledColumn()
+    {
+        $columns = new ColumnSet();
+        $columns->addChild(new Column('firstName', new StringType(), array('property_path' => '[firstName]')));
+        $columns->addChild(new Column('lastName', new StringType(), array('property_path' => '[lastName]')));
+        $columns->addChild(new Column('age', new StringType(), array('property_path' => '[age]')));
+        $columns->setColumnOrders(array('age', 'lastName'), true);
+
+        $exporter = new Exporter();
+        $exporter
+            ->setColumns($columns)
+            ->setOutput(new CSVAdapter())
+            ->setDataSet($this->dataSet1)
+            ->execute();
+        $result = $exporter->getResult();
+
+        $this->assertEquals('Age,"Last Name"
+10,Chan
+15,Wong
 ', $result);
     }
 

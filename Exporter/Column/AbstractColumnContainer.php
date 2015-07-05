@@ -3,6 +3,7 @@
 namespace Sparkson\DataExporterBundle\Exporter\Column;
 
 
+use Sparkson\DataExporterBundle\Exporter\Exception\ColumnNotFoundException;
 use Sparkson\DataExporterBundle\Exporter\Exception\InvalidOperationException;
 
 /**
@@ -13,7 +14,7 @@ use Sparkson\DataExporterBundle\Exporter\Exception\InvalidOperationException;
 abstract class AbstractColumnContainer implements ColumnCollectionInterface
 {
     /**
-     * @var Column[] Array of columns
+     * @var Column[] Array of columns, with column name as key
      */
     protected $children;
 
@@ -83,7 +84,7 @@ abstract class AbstractColumnContainer implements ColumnCollectionInterface
             return $this->children[$columnName];
         };
 
-        throw new \Exception('Column name not found!');
+        throw new ColumnNotFoundException($columnName);
     }
 
     /**
@@ -107,10 +108,19 @@ abstract class AbstractColumnContainer implements ColumnCollectionInterface
     /**
      * {@inheritdoc}
      */
-    public function setColumnOrders(array $columnNames)
+    public function setColumnOrders(array $columnNames, $disableOtherColumns = false)
     {
+        $allColumnNames = array_flip(array_keys($this->children));
+
         foreach ($columnNames as $position => $columnName) {
             $this->getChild($columnName)->setPosition($position + 1);
+            unset($allColumnNames[$columnName]);
+        }
+
+        if ($disableOtherColumns) {
+            foreach ($allColumnNames as $columnName => $dummy) {
+                $this->getChild($columnName)->setEnabled(false);
+            }
         }
     }
 
@@ -120,6 +130,8 @@ abstract class AbstractColumnContainer implements ColumnCollectionInterface
     public function build()
     {
         if ($this->hasChildren()) {
+
+            /** @var Column[] $columns */
             $columns = array_values(array_filter($this->children, function (ColumnInterface $col) {
                 return $col->isEnabled();
             }));
