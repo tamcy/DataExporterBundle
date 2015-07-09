@@ -30,24 +30,18 @@ abstract class AbstractType implements ExporterTypeInterface
     }
 
     /**
-     * Configures the options for this type.
-     *
-     * @param OptionsResolver $resolver The resolver for the options.
+     * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'label' => null,
-            'writer_options' => array(),
-            'translation_domain' => null,
             'compound' => true,
-            'filters' => array(),
             'property_path' => null,
+            'resolver_options' => array(), // column options specified for the value resolver
         ));
 
-        $resolver->setAllowedTypes('writer_options', 'array');
         $resolver->setAllowedTypes('compound', 'bool');
-        $resolver->setAllowedTypes('filters', 'array');
+        $resolver->setAllowedTypes('resolver_options', 'array');
     }
 
     /**
@@ -65,6 +59,6 @@ abstract class AbstractType implements ExporterTypeInterface
     {
         $propertyPath = $options['property_path'] ?: $fieldName;
 
-        return $valueResolver->getValue($data, $propertyPath, $options);
+        return $valueResolver->getValue($data, $propertyPath, $options['resolver_options']);
     }
 }

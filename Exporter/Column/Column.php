@@ -50,6 +50,13 @@ class Column extends AbstractColumnContainer implements ColumnInterface
     public function __construct($name, ExporterTypeInterface $type, array $options = array())
     {
         $resolver = new OptionsResolver();
+        $resolver->setDefaults([
+            'label' => null,
+            'output_options' => array(), // column options specified for the output adapter
+        ]);
+
+        $resolver->setAllowedTypes('output_options', 'array');
+
         $type->setDefaultOptions($resolver);
 
         $this->options = $resolver->resolve($options);
