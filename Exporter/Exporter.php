@@ -103,6 +103,22 @@ class Exporter
     }
 
     /**
+     * @return ValueResolverInterface
+     */
+    public function getValueResolver()
+    {
+        return $this->valueResolver;
+    }
+
+    /**
+     * @param ValueResolverInterface $valueResolver
+     */
+    public function setValueResolver($valueResolver)
+    {
+        $this->valueResolver = $valueResolver;
+    }
+
+    /**
      * Runs the export process.
      *
      * @return $this
