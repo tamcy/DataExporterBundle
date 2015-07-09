@@ -13,6 +13,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 interface ExporterTypeInterface
 {
+    /**
+     * Sets the default options for this exporter type.
+     *
+     * @param OptionsResolver $resolver
+     * @return mixed
+     */
     public function setDefaultOptions(OptionsResolver $resolver);
 
     /**

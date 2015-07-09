@@ -13,8 +13,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 abstract class AbstractOutputAdapter implements OutputInterface
 {
+    /**
+     * @var array Configuration options
+     */
     protected $options;
 
+    /**
+     * Class constructor.
+     *
+     * @param array $options The configuration options
+     */
     public function __construct(array $options = array())
     {
         $resolver = new OptionsResolver();
@@ -23,9 +31,8 @@ abstract class AbstractOutputAdapter implements OutputInterface
         $this->options = $resolver->resolve($options);
     }
 
-
     /**
-     * Configures the options for this type.
+     * Configures the options for this output adapter.
      *
      * @param OptionsResolver $resolver The resolver for the options.
      */
