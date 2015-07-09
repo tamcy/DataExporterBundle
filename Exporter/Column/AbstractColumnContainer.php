@@ -177,7 +177,7 @@ abstract class AbstractColumnContainer implements ColumnCollectionInterface
      */
     public function offsetSet($offset, $value)
     {
-        $this->addChild($offset, $value);
+        throw new InvalidOperationException('Calling method offsetSet() of ColumnCollectionInterface is not allowed.');
     }
 
     /**
