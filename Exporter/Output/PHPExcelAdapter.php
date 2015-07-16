@@ -106,12 +106,14 @@ class PHPExcelAdapter extends BaseFlattenOutputAdapter
      */
     protected function writeHeaderRow(array $columnLabels)
     {
-        foreach ($columnLabels as $idx => $label) {
+        $idx = 0;
+        foreach ($columnLabels as $key => $label) {
             $cell = $this->worksheet->getCellByColumnAndRow($idx, $this->row);
             $cell->setValueExplicit($label, \PHPExcel_Cell_DataType::TYPE_STRING);
 
             $style = $this->worksheet->getStyleByColumnAndRow($idx, $this->row);
             $style->getFont()->setBold(true);
+            $idx++;
         }
 
         $this->row++;
@@ -126,8 +128,8 @@ class PHPExcelAdapter extends BaseFlattenOutputAdapter
     {
         $col = 0;
 
-        foreach ($columnLabels as $idx => $label) {
-            $value = $record[$idx];
+        foreach ($columnLabels as $key => $label) {
+            $value = $record[$key];
 
             if ((string)$value !== '') {
                 $cell = $this->worksheet->getCellByColumnAndRow($col, $this->row);
