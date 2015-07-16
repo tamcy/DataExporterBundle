@@ -102,6 +102,22 @@ Foo,Chan,B,12,7
 ', $result);
     }
 
+    public function testRootTypeWithoutRegistryQuery()
+    {
+        $builder = new ExporterBuilder($this->typeRegistry, $this->valueResolver, new ProfileType());
+        $exporter = $builder->getExporter();
+        $columns = $exporter->getColumns();
+        $this->assertCount(3, $columns);
+        $this->assertTrue($columns->hasChild('firstName'));
+        $this->assertTrue($columns->hasChild('lastName'));
+        $this->assertTrue($columns->hasChild('address'));
+        $addressColumn = $columns->getChild('address');
+        $this->assertCount(3, $addressColumn);
+        $this->assertTrue($addressColumn->hasChild('room'));
+        $this->assertTrue($addressColumn->hasChild('floor'));
+        $this->assertTrue($addressColumn->hasChild('block'));
+    }
+
     public function testAccessingBuilderFromServiceContainer()
     {
         $container = new ContainerBuilder();

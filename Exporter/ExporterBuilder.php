@@ -53,6 +53,11 @@ class ExporterBuilder
         $this->fields = array();
         $this->typeResolver = $typeResolver;
         $this->valueResolver = $valueResolver;
+
+        if ($rootType !== null && !is_string($rootType) && !$rootType instanceof ExporterTypeInterface) {
+            throw new \InvalidArgumentException('Root type must be either a string literal, or an instance of ExporterTypeInterface.');
+        }
+
         $this->rootType = $rootType;
         $this->locked = ($rootType !== null);
     }
@@ -100,8 +105,12 @@ class ExporterBuilder
 
         if ($this->rootType) {
             $this->locked = false;
-            $type = $this->typeResolver->getType($this->rootType);
-            $type->buildExporter($this);
+
+            if (is_string($this->rootType)) {
+                $this->rootType = $this->typeResolver->getType($this->rootType);
+            }
+
+            $this->rootType->buildExporter($this);
         }
 
         foreach ($this->fields as $columnName => $columnData) {
