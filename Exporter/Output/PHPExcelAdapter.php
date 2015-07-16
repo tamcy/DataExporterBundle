@@ -118,6 +118,14 @@ class PHPExcelAdapter extends BaseFlattenOutputAdapter
 
             $style = $this->worksheet->getStyleByColumnAndRow($idx, $this->row);
             $style->getFont()->setBold(true);
+
+            $options = $column->getOptions();
+            $col = $this->worksheet->getColumnDimensionByColumn($idx);
+            if (!empty($options['output_options']['width'])) {
+                $col->setAutoSize(false)->setWidth($options['output_options']['width']);
+            } else {
+                $col->setAutoSize(true);
+            }
             $idx++;
         }
 
@@ -142,8 +150,13 @@ class PHPExcelAdapter extends BaseFlattenOutputAdapter
 
             if ((string)$value !== '') {
                 $cell = $this->worksheet->getCellByColumnAndRow($col, $this->row);
-                $this->worksheet->getColumnDimensionByColumn($col)->setAutoSize(true);
                 $cell->setValueExplicit($value, $this->guessCellType($value));
+            }
+
+            $options = $column->getOptions();
+            if (!empty($options['output_options']['wrap_text'])) {
+                $style = $this->worksheet->getStyleByColumnAndRow($col, $this->row);
+                $style->getAlignment()->setWrapText(true);
             }
 
             $col++;
