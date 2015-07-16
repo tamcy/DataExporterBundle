@@ -2,6 +2,7 @@
 
 namespace Sparkson\DataExporterBundle\Exporter\Output;
 
+use Sparkson\DataExporterBundle\Exporter\Column\Column;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -104,12 +105,16 @@ class PHPExcelAdapter extends BaseFlattenOutputAdapter
     /**
      * {@inheritdoc}
      */
-    protected function writeHeaderRow(array $columnLabels)
+    protected function writeHeaderRow(array $columns)
     {
         $idx = 0;
-        foreach ($columnLabels as $key => $label) {
+        /**
+         * @var string $key
+         * @var Column $column
+         */
+        foreach ($columns as $key => $column) {
             $cell = $this->worksheet->getCellByColumnAndRow($idx, $this->row);
-            $cell->setValueExplicit($label, \PHPExcel_Cell_DataType::TYPE_STRING);
+            $cell->setValueExplicit($column->getLabel(), \PHPExcel_Cell_DataType::TYPE_STRING);
 
             $style = $this->worksheet->getStyleByColumnAndRow($idx, $this->row);
             $style->getFont()->setBold(true);
@@ -124,11 +129,15 @@ class PHPExcelAdapter extends BaseFlattenOutputAdapter
     /**
      * {@inheritdoc}
      */
-    protected function writeRecordRow(array $columnLabels, array $record)
+    protected function writeRecordRow(array $columns, array $record)
     {
         $col = 0;
 
-        foreach ($columnLabels as $key => $label) {
+        /**
+         * @var string $key
+         * @var Column $column
+         */
+        foreach ($columns as $key => $column) {
             $value = $record[$key];
 
             if ((string)$value !== '') {

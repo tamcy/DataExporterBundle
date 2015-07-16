@@ -69,20 +69,20 @@ class TwigTemplateOutputAdapter extends BaseFlattenOutputAdapter
     /**
      * {@inheritdoc}
      */
-    protected function writeHeaderRow(array $columnLabels)
+    protected function writeHeaderRow(array $columns)
     {
-        $this->header = $columnLabels;
+        $this->header = $columns;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function writeRecordRow(array $columnLabels, array $record)
+    protected function writeRecordRow(array $columns, array $record)
     {
         $fields = array();
 
         /** @var Column $column */
-        foreach ($columnLabels as $key => $columnLabel) {
+        foreach ($columns as $key => $column) {
             $fields[] = $record[$key];
         }
 

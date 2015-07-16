@@ -19,7 +19,7 @@ abstract class BaseFlattenOutputAdapter extends AbstractOutputAdapter
 {
     private $waitForFirstRecord = true;
 
-    private $flatColumnLabels = array();
+    private $flatColumns = array();
 
     /**
      * {@inheritdoc}
@@ -55,7 +55,7 @@ abstract class BaseFlattenOutputAdapter extends AbstractOutputAdapter
                 $prefixes[] = $column->getName();
                 $this->flattenColumns($column->getBuiltColumns(), $prefixes);
             } else {
-                $this->flatColumnLabels[$this->getColumnName($column, $prefixes)] = $column->getLabel();
+                $this->flatColumns[$this->getColumnName($column, $prefixes)] = $column;
             }
         }
     }
@@ -65,7 +65,7 @@ abstract class BaseFlattenOutputAdapter extends AbstractOutputAdapter
         $this->flattenColumns($columns);
 
         if ($this->options['header']) {
-            $this->writeHeaderRow($this->flatColumnLabels);
+            $this->writeHeaderRow($this->flatColumns);
         }
     }
 
@@ -94,7 +94,7 @@ abstract class BaseFlattenOutputAdapter extends AbstractOutputAdapter
         }
 
         $this->flattenRecord($result, $record, $columns);
-        $this->writeRecordRow($this->flatColumnLabels, $result);
+        $this->writeRecordRow($this->flatColumns, $result);
     }
 
     /**
@@ -103,9 +103,9 @@ abstract class BaseFlattenOutputAdapter extends AbstractOutputAdapter
      * This method will be called before the first record is written when `header` is
      * set to true in options.
      *
-     * @param array $columnLabels
+     * @param Column[] $columns
      */
-    abstract protected function writeHeaderRow(array $columnLabels);
+    abstract protected function writeHeaderRow(array $columns);
 
     /**
      * Writes the record row.
@@ -115,9 +115,9 @@ abstract class BaseFlattenOutputAdapter extends AbstractOutputAdapter
      * value equals to header label.
      * $record is an associative array with key equals to a unique column name.
      *
-     * @param array $columnLabels The column headers
+     * @param Column[] $columns The column
      * @param array $record The record
      */
-    abstract protected function writeRecordRow(array $columnLabels, array $record);
+    abstract protected function writeRecordRow(array $columns, array $record);
 
 }

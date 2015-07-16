@@ -47,20 +47,29 @@ class CSVAdapter extends BaseFlattenOutputAdapter
     /**
      * {@inheritdoc}
      */
-    protected function writeHeaderRow(array $columnLabels)
+    protected function writeHeaderRow(array $columns)
     {
-        fputcsv($this->handle, $columnLabels, $this->options['delimiter'], $this->options['enclosure'], $this->options['escape_char']);
+        $labels = array();
+        /**
+         * @var string $key
+         * @var Column $column
+         */
+        foreach ($columns as $key => $column) {
+            $labels[$key] = $column->getLabel();
+        }
+
+        fputcsv($this->handle, $labels, $this->options['delimiter'], $this->options['enclosure'], $this->options['escape_char']);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function writeRecordRow(array $columnLabels, array $record)
+    protected function writeRecordRow(array $columns, array $record)
     {
         $fields = array();
 
         /** @var Column $column */
-        foreach ($columnLabels as $key => $columnLabel) {
+        foreach ($columns as $key => $columnLabel) {
             $fields[] = $record[$key];
         }
 

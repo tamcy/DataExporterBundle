@@ -1,6 +1,7 @@
 <?php
 
 namespace Sparkson\DataExporterBundle\Exporter\Output;
+use Sparkson\DataExporterBundle\Exporter\Column\Column;
 
 /**
  * Interface for exporter output.
@@ -17,7 +18,7 @@ interface OutputInterface
     /**
      * Called when the exporter exports a record.
      *
-     * @param array $columns The column set
+     * @param Column[] $columns The column set
      * @param array $record The record
      */
     public function writeRecord(array $columns, array $record);
