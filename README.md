@@ -17,11 +17,17 @@ Assume a variable `$items` storing 2 user profile objects:
 
 This exporter bundle allows you to have the above data converted to a given format, e.g. CSV or Excel.
 
-To use the exporter you need to initialize an `Exporter` instance. Normally you would do this via the `ExporterBuilder` class. This can be done 
+To use the exporter you need to initialize an `Exporter` instance. Normally you would do this via the `ExporterBuilder` class: 
 
 ```
-// First retrieve the exporter factory service.
-$exporterFactory = $container->get('sparkson.data_exporter.factory');
+// Of course you need to first enable the bundle.
+$bundles = array(
+    // ....
+    new Sparkson\DataExporterBundle\SparksonDataExporterBundle(),
+);
+
+// Assume you are in an action. First retrieve the exporter factory service.
+$exporterFactory = $this->get('sparkson.data_exporter.factory');
 
 // Then create a new exporter builder instance.
 $builder = $exporterFactory->createBuilder();
@@ -78,14 +84,14 @@ Here is how a column is added:
 `$builder->add('id', 'string')`
 
  * The first parameter is the field name, which has to be unique among the same column set. By default the library use Symfony's PropertyAccess component to retrieve the export value from the data object/array using this column name.
- * The second parameter is the field type. It can be a type name registered in the type registry (normally via the service tag), or a concrete `Sparkson\DataExporterBundle\Exporter\Type\ExporterTypeInterface` instance. For example, you can write `$builder->add('id', new \Sparkson\DataExporterBundle\Exporter\Core\Type\StringType)` and the result will be the same.
+ * The second parameter is the field type. It can be a type name registered in the type registry (normally via the service tag), or a concrete instance implementing `Sparkson\DataExporterBundle\Exporter\Type\ExporterTypeInterface`. For example, you can write `$builder->add('id', new \Sparkson\DataExporterBundle\Exporter\Core\Type\StringType())` and the result will be the same.
  * The third parameter (not shown in the above example) is the options. The available options differ from field types. 
 
 That said, a few option attributes are common among all types.
 
 ### label
 
-Each column will have a label (which is the name or caption in the header row). It will be generated from the column name by default, but when The `label` attribute is supplied, it will be used instead.   
+Each column has a label, which will become the caption in the header row. It will be generated from the column name by default, but when the `label` attribute is supplied, it will be used instead.   
 
 ### property_path
 
@@ -95,7 +101,7 @@ The `property_path` attribute overrides the default behavior of using the column
 $builder->add('id', 'string', ['property_path' => '[id]'])
 ```
 
-The field types do not retrieve the column value directly. Instead it passes a value retrieval request to the value resolver component which can be changed via `Exporter::setValueResolver`. If unspecified, `Sparkson\DataExporterBundle\Exporter\ValueResolver\DefaultValueResolver` will be used as the default, which uses Symfony's PropertyAccess component to retrieve the column value. Thus property path can be any value understood by the PropertyAccess component when the default value resolver is used. This means that property of an inner object is also supported:   
+Field type does not retrieve column value directly. Instead it passes a value retrieval request to the value resolver component which can be changed via `Exporter::setValueResolver()`. If unspecified, `Sparkson\DataExporterBundle\Exporter\ValueResolver\DefaultValueResolver` will be used as the default, which uses Symfony's PropertyAccess component to retrieve the column value. Thus property path can be any value understood by the PropertyAccess component when the default value resolver is used. This means that property of an inner object is also supported:   
  
 ```
  $builder->add('author_name', 'string', ['property_path' => 'author.name'])
@@ -105,7 +111,7 @@ The field types do not retrieve the column value directly. Instead it passes a v
 
 Similar to field types, additional options can be supplied to value resolvers. This can be done through the `resolver_options` array in an field type.
 
-For example, the `DefaultValueResolver` supports a `filter` option which accepts an array of either:
+For example, `DefaultValueResolver` supports a `filter` option which accepts an array of either:
  * a string which is a simple PHP function; or
  * an instance implementing `Sparkson\DataExporterBundle\Exporter\ValueResolver\Filter\FilterInterface`. One example is the `CustomFilter` class in this library.
 
@@ -119,15 +125,15 @@ $builder->add('description', 'string', ['resolver_options' => ['filters' => [ ne
 });]]]);
 ```
 
-This bundle contains the following field types:
+This bundle comes with the following field types:
 
- * StringType
- * BooleanType
- * CallbackType
- * DateTimeType
- * MapType
- * NumberType
- * RawType
+ * `StringType`
+ * `BooleanType`
+ * `CallbackType`
+ * `DateTimeType`
+ * `MapType`
+ * `NumberType`
+ * `RawType`
 
 Here I only illustrate the use of the `MapType`. For other types please refer to their source files.
 ```
