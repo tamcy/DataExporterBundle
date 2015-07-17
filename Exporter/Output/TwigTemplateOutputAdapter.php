@@ -54,7 +54,7 @@ class TwigTemplateOutputAdapter extends BaseFlattenOutputAdapter
         parent::configureOptions($resolver);
 
         $resolver->setDefaults(array(
-            'template' => '@SparksonDataExporterBundle/exporter/template.html.twig',
+            'template' => realpath(__DIR__ . '/../../Resources/view/template.html.twig'),
         ));
     }
 

@@ -1,0 +1,22 @@
+{% spaceless %}
+    <table>
+        {%- if header -%}
+            <thead>
+            <tr>
+                {%- for column in header -%}
+                    <th>{{ column.label|nl2br }}</th>
+                {%- endfor -%}
+            </tr>
+            </thead>
+        {%- endif -%}
+        <tbody>
+        {%- for data in data_set -%}
+            <tr>
+                {%- for col in data -%}
+                    <td>{{ col|nl2br }}</td>
+                {%- endfor -%}
+            </tr>
+        {%- endfor -%}
+        </tbody>
+    </table>
+{% endspaceless %}
