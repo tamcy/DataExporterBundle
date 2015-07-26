@@ -238,3 +238,45 @@ $columnSet->setColumnOrders(['lastName', 'firstName'], true);
 This is useful when you provide an UI for users to choose which columns to export. Instead of adding ifs around the builder's add field statement, just disable the unselected columns after the exporter is built, and before the exporter is run. 
 
 **Important: Column properties cannot be changed once `$exporter->execute()` is called.**
+
+### Working with large data sets in Doctrine
+
+To export database records with Doctrine, one would normally write this: 
+
+```
+// $em is the Entity Manager
+$items = $em->getRepository('AppBundle:EntityToExport')->findAll();
+$exporter->setDataSet($items);
+```
+
+But this doesn't not work well for large data sets, as the memory consumption can be very high. Fortunately, Doctrine provides a way to [iterate over a large result set](http://doctrine-orm.readthedocs.org/en/latest/reference/batch-processing.html#iterating-large-results-for-data-processing). Here is the code slightly modified from Doctrine's documentation:
+ 
+```
+$q = $em->createQuery('select e from AppBundle:EntityToExport e');
+$iterableResult = $q->iterate();
+foreach ($iterableResult as $row) {
+   // do stuff with the data in the row, $row[0] is always the object
+
+   // detach from Doctrine, so that it can be Garbage-Collected immediately
+   $em->detach($row[0]);
+}
+```
+
+But how can it be adapted to our Exporter? One simple way is to make use of PHP's [Generator](http://php.net/manual/en/language.generators.overview.php), like so:
+```
+function get_data_set()
+{
+    $q = $em->createQuery('select e from AppBundle:EntityToExport e');
+    $iterableResult = $q->iterate();
+    foreach ($iterableResult as $row) {
+        yield $row[0];
+    
+        // detach from Doctrine, so that it can be Garbage-Collected immediately
+        $em->detach($row[0]);
+    }
+}
+
+$exporter->setDataSet(get_data_set());
+```
+
+That's it. Of course this only works for PHP >= 5.5. Before PHP 5.5 you need to roll your own iterator wrapper class.
