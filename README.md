@@ -15,42 +15,52 @@ Assume a variable `$items` storing 2 user profile objects:
 
 Here `$items` is a variable containing a data set or collection. This exporter bundle allows you to have the data set converted to a given format, e.g. CSV or Excel.
 
-To use it, you first need to initialize an `Exporter` instance. Normally you would do this via the `ExporterBuilder` class: 
-
+To use it, first enable the bundle in `AppKernel.php`.
+ 
 ```php
-// By the way, you need to first enable the bundle in AppKernel.php ...
 $bundles = array(
     // ....
     new Sparkson\DataExporterBundle\SparksonDataExporterBundle(),
 );
+```
 
-// Now assume you are in an action. First retrieve the exporter factory service.
-$exporterFactory = $this->get('sparkson.data_exporter.factory');
+Now assume you are in a controller action. Here is how the exporter is used:  
 
-// Then create a new exporter builder instance.
-$builder = $exporterFactory->createBuilder();
-
-// Now you can use the builder to build an exporter. Let's define the column structure.
-$builder
-    ->add('id', 'string')
-    ->add('firstName', 'string')
-    ->add('lastName', 'string')
-    ->add('age', 'string');
-
-// Build the exporter.
-$exporter = $builder->getExporter();
-
-// Assigns an output adapter. Here we use the CSV adapter that utilizes PHP's fputcsv() function.
-$exporter->setOutput(new \Sparkson\DataExporterBundle\Exporter\Output\CSVAdapter());
-
-// Finally, sets the variable containing the data set to export.
-$exporter->setDataSet($items);
-
-// Run!
-$exporter->execute();
-
-// Get the result
-$result = $exporter->getResult();
+```php
+public function exportAction(Request $request)
+{
+    // First, retrieve the ExporterFactory service. 
+    $exporterFactory = $this->get('sparkson.data_exporter.factory');
+    
+    // Then create a new exporter builder instance.
+    $builder = $exporterFactory->createBuilder();
+    
+    // We'll use the builder to build an exporter.
+    // Let's define the column structure.
+    $builder
+        ->add('id', 'string')
+        ->add('firstName', 'string')
+        ->add('lastName', 'string')
+        ->add('age', 'string');
+    
+    // Build the exporter.
+    $exporter = $builder->getExporter();
+    
+    // Assigns an output adapter. Here we use the CSV adapter that utilizes PHP's fputcsv() function.
+    $exporter->setOutput(new \Sparkson\DataExporterBundle\Exporter\Output\CSVAdapter());
+    
+    // Finally, sets the variable containing the data set to export ($items is assumed here).
+    $exporter->setDataSet($items);
+    
+    // Run!
+    $exporter->execute();
+    
+    // By default, the output adapter will write the result to a variable which can be retrieved via getResult().
+    $result = $exporter->getResult();
+    
+    // Feed the result to the response object  
+    return new Response($result);
+}
 ```
 
 The `$result` variable will look like as follow:
@@ -75,7 +85,7 @@ $result = $builder
     ->getResult();
 ```
 
-## Defining column structure
+## Defining the column structure
 
 Here is how a column is added:
 
@@ -93,16 +103,16 @@ Each column has a label, which will become the caption in the header row. If uns
     
 ### property_path
 
-The `property_path` attribute overrides the default behavior of using the column name as the property path to retrieve value of the column. For example, you may want to write this when the data is an array: 
+The `property_path` attribute overrides the default behaviour of using the column name as the property path to retrieve value of the column. For example, you may want to write this when the data is an array: 
 
 ```php
 $builder->add('id', 'string', ['property_path' => '[id]'])
 ```
 
-Field type does not retrieve column value directly. Instead it passes a value retrieval request to the value resolver component which can be changed via `Exporter::setValueResolver()`. If unspecified, `Sparkson\DataExporterBundle\Exporter\ValueResolver\DefaultValueResolver` will be used as the default, which uses Symfony's PropertyAccess component to retrieve the column value. Thus property path can be any value understood by the PropertyAccess component when the default value resolver is used. This means that property of an inner object is also supported:   
+Field type does not retrieve a column value directly. Instead it passes a value retrieval request to the value resolver component which can be changed via `Exporter::setValueResolver()`. If unspecified, `Sparkson\DataExporterBundle\Exporter\ValueResolver\DefaultValueResolver` will be used as the default, which uses Symfony's PropertyAccess component to retrieve the column value. Thus property path can be any value understood by the PropertyAccess component when the default value resolver is used. This means that property of an inner object is also supported:   
  
 ```php
- $builder->add('author_name', 'string', ['property_path' => 'author.name'])
+$builder->add('author_name', 'string', ['property_path' => 'author.name'])
 ```
 
 ### resolver_options
@@ -113,13 +123,13 @@ For example, `DefaultValueResolver` supports a `filter` option which accepts an 
  * a string which is a simple PHP function; or
  * an instance implementing `Sparkson\DataExporterBundle\Exporter\ValueResolver\Filter\FilterInterface`. One example is the `CustomFilter` class in this library.
 
-This is mainly provided to sanitize a value using functions like `trim()`, `ltrim()` etc. after retrieving the value and before passing to the field type for final output.
+Filters serve as value preprocessors, mainly for sanitizing values using functions like `trim()`, `ltrim()` etc. AFTER the value is retried and BEFORE passing it to the field type for final output.
 
 ```php
 $builder->add('description', 'string', ['resolver_options' => ['filters' => ['trim']]]);
 // OR
 $builder->add('description', 'string', ['resolver_options' => ['filters' => [ new CustomFilter(function($value) {
-  return trim($value);
+    return trim($value);
 })]]]);
 ```
 
@@ -198,17 +208,17 @@ When `execute()` is called, the exporter iterates the data set one by one, each 
 
 The following output adapters are supplied in this library:
  * `CSVAdapter`, which uses PHP's own `fputcsv()` function to write data.
- * `PHPExcelAdapter`, which utilizes the PHPExcel library to write data (you need to add `phpexcel/phpexcel` to your `composer.json`).
+ * `PHPExcelAdapter`, which utilizes the [PHPExcel](https://github.com/PHPOffice/PHPExcel) library to write data.
  * `TwigTemplateOutputAdapter`, which renders the result using a customizable twig template.
 
-Unlike field types, output adapters are not services, so you need to initialize them manually. Refer to their source codes for details on constructor arguments and available options. Here shows some brief usage examples:
+Unlike field types, output adapters are not services, so you need to create them manually. Refer to their source codes for details on constructor arguments and available options. Here shows some brief usage examples:
 
-By default, `CSVAdapter` writes to temporary memory during export and the result can be retrieved with the `getResult()` method. In the following example, `CSVAdapter` writes the export result to a custom file, and will not keep the result for further retrieval via `getResult()`:
+By default, `CSVAdapter` writes data to memory during `$exporter->execute()` which can be retrieved with the `getResult()` method. In the following example, `CSVAdapter` is configured to write the export result to a file instead, and will not keep the result (i.e. it won't read the data back) for further retrieval via `getResult()`:
 
 ```php
 $exporter->setOutput(new CSVAdapter(array(
-    'output' => __DIR__.'/output.csv', 
-    'keep_result' => false, // 
+    'output' => __DIR__.'/output.csv', // sets output file 
+    'keep_result' => false,            // do not keep result for getResult()
 )));
 ```
 
@@ -223,7 +233,13 @@ $exporter->setOutput(new TwigTemplateOutputAdapter($twig, [
 
 Note that the default template located at `Resources/view/exporter/template.html.twig` will be used if no template is given. You can use this file to learn writing your own template.
 
-Hint: You can define your own output adapter services. For example, you can define a service for `TwigTemplateOutputAdapter` which uses your own template:  
+Hint: You can define your own output adapter services. For example, you can define a service for `TwigTemplateOutputAdapter` which uses your own template. After that the above code example can be simplified as follow:
+  
+```
+$exporter->setOutput($this->get('app.exporter.output_adapter.twig'));
+```
+
+Here is how the service is defined in `services.yml`:
 
 ```php
 app.exporter.output_adapter.twig:
@@ -231,12 +247,6 @@ app.exporter.output_adapter.twig:
     arguments:
         - @twig
         - { template: "@AppBundle/exporter/my_exporter_template.html.twig" }
-```
-
-The above code example can now be written as follow:
-
-```
-$exporter->setOutput($this->get('app.exporter.output_adapter.twig'));
 ```
 
 ## Misc. notes
@@ -270,7 +280,7 @@ $columnSet->setColumnOrders(['lastName', 'firstName'], true);
 // "id" and "age" are disabled.
 ```
 
-This is useful when you provide an UI for users to choose which columns to export. Instead of adding ifs around the builder's add field statement, just disable the unselected columns after the exporter is built, and before the exporter is run. 
+This is especially useful when you provide an UI for users to choose which columns to export. Instead of adding ifs around the builder's add field statements, just add all of them and disable the unwanted ones after the exporter is built. 
 
 **Important: Column properties cannot be changed once `$exporter->execute()` is called.**
 
@@ -284,9 +294,9 @@ $items = $em->getRepository('AppBundle:EntityToExport')->findAll();
 $exporter->setDataSet($items);
 ```
 
-But this doesn't not work well for large data sets, as the memory consumption can be very high. Fortunately, Doctrine provides a way to [iterate over a large result set](http://doctrine-orm.readthedocs.org/en/latest/reference/batch-processing.html#iterating-large-results-for-data-processing). Here is the code slightly modified from Doctrine's documentation:
+But this does not work well for large data sets, as the memory consumption can be very high. Fortunately, Doctrine provides a way to [iterate over a large result set](http://doctrine-orm.readthedocs.org/en/latest/reference/batch-processing.html#iterating-large-results-for-data-processing). Here is the code slightly modified from Doctrine's documentation:
  
-```
+```php
 $q = $em->createQuery('SELECT e FROM AppBundle:EntityToExport e');
 $iterableResult = $q->iterate();
 foreach ($iterableResult as $row) {
@@ -297,7 +307,7 @@ foreach ($iterableResult as $row) {
 }
 ```
 
-This technique can be adapted to our exporter by making use of PHP's [Generator](http://php.net/manual/en/language.generators.overview.php), like so:
+We can adopted this technique using of PHP's [Generator](http://php.net/manual/en/language.generators.overview.php), like so:
 ```php
 $getDataSetIterator = function()
 {
@@ -314,4 +324,4 @@ $getDataSetIterator = function()
 $exporter->setDataSet($getDataSetIterator());
 ```
 
-That's it. Of course this only works for PHP >= 5.5. Before PHP 5.5 you need to roll your own iterator wrapper class.
+That's it. For PHP < 5.5 you will need to roll your own iterator wrapper class.
