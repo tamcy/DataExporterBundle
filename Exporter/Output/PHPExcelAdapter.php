@@ -8,6 +8,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * PHPExcel output adapter.
  *
+ * This adapter writes the export result to a format supported by the
+ * PHPExcel library.
+ *
  * @author Tamcy <tamcyhk@outlook.com>
  */
 class PHPExcelAdapter extends BaseFlattenOutputAdapter
@@ -41,7 +44,7 @@ class PHPExcelAdapter extends BaseFlattenOutputAdapter
         parent::configureOptions($resolver);
 
         $resolver->setDefaults(array(
-            'output' => 'php://output',
+            'output' => null,
             'title' => 'Exported data',
             'keep_result' => true,
             'header' => true,
@@ -171,15 +174,29 @@ class PHPExcelAdapter extends BaseFlattenOutputAdapter
     public function end()
     {
         $this->initializeWriter();
-        $this->writer->save($this->options['output']);
 
-        if ($this->options['keep_result'] && is_file($this->options['output'])) {
-            $this->data = file_get_contents($this->options['output']);
+        if (null === $this->options['output']) {
+            $file = tempnam(sys_get_temp_dir(), 'phpexcel_export');
+            $isTempFile = true;
+        } else {
+            $file = $this->options['output'];
+            $isTempFile = false;
+        }
+
+        $this->writer->save($file);
+        if ($this->options['keep_result'] && is_file($file)) {
+            $this->data = file_get_contents($file);
+        }
+
+        if ($isTempFile) {
+            @unlink($file);
         }
     }
 
     /**
-     * {@inheritdoc}
+     * Returns the result produced by this output.
+     *
+     * @return string
      */
     public function getResult()
     {

@@ -29,11 +29,8 @@ class PHPExcelAdapterTest extends \PHPUnit_Framework_TestCase
             )))
             ->setDataSet($this->dataSet);
 
-        ob_start();
         $exporter->execute();
-        $result = ob_get_contents();
-        ob_end_clean();
-        $result = preg_replace("#\r|\n#", '', $result);
+        $result = preg_replace("#\r|\n#", '', $exporter->getResult());
         $this->assertEquals('"First Name","Last Name""Foo","Chan""Bar","Wong"', $result);
     }
 }
