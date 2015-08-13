@@ -17,7 +17,9 @@
     "require-dev": {
         "symfony/framework-bundle": "~2.7",
         "phpoffice/phpexcel": "1.8",
-        "twig/twig": "^1.18"
+        "twig/twig": "^1.18",
+        "asimlqt/php-google-spreadsheet-client": "^2.3",
+        "google/apiclient": "^1.1"
     },
     "suggest": {
         "phpoffice/phpexcel": "To use the PHPExcel writer"
