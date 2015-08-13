@@ -3,17 +3,17 @@
 <phpunit bootstrap="./vendor/autoload.php" colors="true">
     <testsuites>
         <testsuite name="SparksonDataExporterBundle">
-            <directory suffix="Test.php">./Tests</directory>
+            <directory suffix="Test.php">./src/Tests</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory>./</directory>
+            <directory>./src</directory>
             <exclude>
-                <directory>./Resources</directory>
-                <directory>./Tests</directory>
-                <directory>./vendor</directory>
+                <directory>./src/Resources</directory>
+                <directory>./src/Tests</directory>
+                <directory>./src/vendor</directory>
             </exclude>
         </whitelist>
     </filter>
