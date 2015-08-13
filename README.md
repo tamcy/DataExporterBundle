@@ -208,6 +208,7 @@ When `execute()` is called, the exporter iterates the data set one by one, each 
 
 The following output adapters are supplied in this library:
  * `CSVAdapter`, which uses PHP's own `fputcsv()` function to write data.
+ * `GoogleSpreadsheetOutputAdapter`, which uses [asimlqt/php-google-spreadsheet-client](https://github.com/asimlqt/php-google-spreadsheet-client) to write data to Google Spreadsheet.
  * `PHPExcelAdapter`, which utilizes the [PHPExcel](https://github.com/PHPOffice/PHPExcel) library to write data.
  * `TwigTemplateOutputAdapter`, which renders the result using a customizable twig template.
 
