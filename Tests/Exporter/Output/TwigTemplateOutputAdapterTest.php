@@ -17,7 +17,7 @@ class TwigTemplateOutputAdapterTest extends \PHPUnit_Framework_TestCase {
 
     public function testSimpleStructure()
     {
-        $loader = new \Twig_Loader_Filesystem(__DIR__.'/../../../Resources/view/exporter');
+        $loader = new \Twig_Loader_Filesystem(__DIR__.'/../../../Resources/view');
         $twig = new \Twig_Environment($loader, array());
 
         $columns = new ColumnSet();
