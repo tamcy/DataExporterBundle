@@ -6,9 +6,9 @@ use Sparkson\DataExporterBundle\Exporter\Column\Column;
 use Sparkson\DataExporterBundle\Exporter\Column\ColumnCollectionInterface;
 use Sparkson\DataExporterBundle\Exporter\Column\ColumnSet;
 use Sparkson\DataExporterBundle\Exporter\Exception\InvalidArgumentException;
-use Sparkson\DataExporterBundle\Exporter\Output\OutputInterface;
-use Sparkson\DataExporterBundle\Exporter\ValueResolver\ValueResolverInterface;
+use Sparkson\DataExporterBundle\Exporter\Output\OutputAdapterInterface;
 use Sparkson\DataExporterBundle\Exporter\ValueResolver\DefaultValueResolver;
+use Sparkson\DataExporterBundle\Exporter\ValueResolver\ValueResolverInterface;
 
 /**
  * The Exporter class.
@@ -23,7 +23,7 @@ class Exporter
     private $columns;
 
     /**
-     * @var OutputInterface
+     * @var OutputAdapterInterface
      */
     private $output;
 
@@ -61,6 +61,7 @@ class Exporter
     public function setDataSet($dataSet)
     {
         $this->dataSet = $dataSet;
+
         return $this;
     }
 
@@ -73,6 +74,7 @@ class Exporter
     public function setColumns(ColumnCollectionInterface $columns)
     {
         $this->columns = $columns;
+
         return $this;
     }
 
@@ -85,17 +87,18 @@ class Exporter
     }
 
     /**
-     * @param OutputInterface $output
+     * @param OutputAdapterInterface $outputAdapter
      * @return $this
      */
-    public function setOutput(OutputInterface $output)
+    public function setOutput(OutputAdapterInterface $outputAdapter)
     {
-        $this->output = $output;
+        $this->output = $outputAdapter;
+
         return $this;
     }
 
     /**
-     * @return OutputInterface
+     * @return OutputAdapterInterface
      */
     public function getOutput()
     {
@@ -121,6 +124,11 @@ class Exporter
     /**
      * Runs the export process.
      *
+     * The exporter will iterate over the data set one by one, then iterate over the
+     * column set of each record. The output adapter is responsible for writing the
+     * exported data in a specific format. The export result can be retrieved with
+     * getResult() if the output adapter is configured to write to a buffer.
+     *
      * @return $this
      * @throws InvalidArgumentException
      */
@@ -142,12 +150,13 @@ class Exporter
         }
 
         $this->output->end();
+
         return $this;
     }
 
     /**
      * @param Column[] $sortedColumns
-     * @param $row
+     * @param          $row
      * @return array
      * @throws InvalidArgumentException
      */
@@ -174,9 +183,12 @@ class Exporter
     /**
      * Returns the exported result.
      *
-     * This just proxies to the output adapter's getResult() method.
+     * Note that an output adapter may not necessary keep a buffered result.
+     * For example, it is possible to configure an output adapter to write the
+     * exported data to a file (or a remote location) and forget about it.
+     * In this case, getResult() will return null.
      *
-     * @return string
+     * @return string|null
      */
     public function getResult()
     {
