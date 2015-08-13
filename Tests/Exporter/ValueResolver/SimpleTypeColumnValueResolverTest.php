@@ -2,10 +2,8 @@
 
 namespace Sparkson\DataExporterBundle\Tests\Exporter\ValueResolver;
 
-use Sparkson\DataExporterBundle\Exporter\Column\Column;
-use Sparkson\DataExporterBundle\Exporter\Core\Type\StringType;
-use Sparkson\DataExporterBundle\Exporter\ValueResolver\Filter\CustomFilter;
 use Sparkson\DataExporterBundle\Exporter\ValueResolver\DefaultValueResolver;
+use Sparkson\DataExporterBundle\Exporter\ValueResolver\Filter\CustomFilter;
 
 class SimpleTypeColumnValueResolverTest extends \PHPUnit_Framework_TestCase
 {

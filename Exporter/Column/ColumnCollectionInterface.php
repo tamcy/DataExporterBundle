@@ -90,7 +90,7 @@ interface ColumnCollectionInterface extends \ArrayAccess, \Countable
      * Note: columns specified in $columnNames will NOT be enabled explicitly, even when $disableOtherColumns is true.
      *
      * @param array $columnNames
-     * @param bool $disableOtherColumns
+     * @param bool  $disableOtherColumns
      */
     public function setColumnOrders(array $columnNames, $disableOtherColumns = false);
 

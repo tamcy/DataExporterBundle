@@ -42,8 +42,8 @@ class ExporterBuilder
     /**
      * Class constructor.
      *
-     * @param TypeResolverInterface $typeResolver
-     * @param ValueResolverInterface $valueResolver
+     * @param TypeResolverInterface        $typeResolver
+     * @param ValueResolverInterface       $valueResolver
      * @param string|ExporterTypeInterface $rootType
      */
     public function __construct(TypeResolverInterface $typeResolver,
@@ -68,9 +68,9 @@ class ExporterBuilder
      * If a type name is provided, the type will be retrieved from the type registry.
      * Field type will be wrapped by a column instance.
      *
-     * @param string $name The name of the field/column, which should be unique at the same level
+     * @param string                       $name The name of the field/column, which should be unique at the same level
      * @param string|ExporterTypeInterface $type The exporter type name or instance
-     * @param array $options Field options
+     * @param array                        $options Field options
      * @return $this
      * @throws InvalidOperationException When a root type is defined
      */
@@ -84,6 +84,7 @@ class ExporterBuilder
             'type' => $type,
             'options' => $options,
         );
+
         return $this;
     }
 
@@ -96,6 +97,7 @@ class ExporterBuilder
     public function setValueResolver(ValueResolverInterface $resolver)
     {
         $this->valueResolver = $resolver;
+
         return $this;
     }
 
@@ -134,6 +136,7 @@ class ExporterBuilder
 
             $columns->addChild($column);
         }
+
         return $columns;
     }
 

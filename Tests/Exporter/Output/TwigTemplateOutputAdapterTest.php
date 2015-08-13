@@ -8,7 +8,8 @@ use Sparkson\DataExporterBundle\Exporter\Core\Type\StringType;
 use Sparkson\DataExporterBundle\Exporter\Exporter;
 use Sparkson\DataExporterBundle\Exporter\Output\TwigTemplateOutputAdapter;
 
-class TwigTemplateOutputAdapterTest extends \PHPUnit_Framework_TestCase {
+class TwigTemplateOutputAdapterTest extends \PHPUnit_Framework_TestCase
+{
 
     private $dataSet = array(
         array('firstName' => 'Foo', 'lastName' => 'Chan'),
@@ -17,7 +18,7 @@ class TwigTemplateOutputAdapterTest extends \PHPUnit_Framework_TestCase {
 
     public function testSimpleStructure()
     {
-        $loader = new \Twig_Loader_Filesystem(__DIR__.'/../../../Resources/view');
+        $loader = new \Twig_Loader_Filesystem(__DIR__ . '/../../../Resources/view');
         $twig = new \Twig_Environment($loader, array());
 
         $columns = new ColumnSet();

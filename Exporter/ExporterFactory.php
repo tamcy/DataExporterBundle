@@ -23,7 +23,7 @@ class ExporterFactory
     /**
      * Class constructor.
      *
-     * @param TypeResolverInterface $typeResolver
+     * @param TypeResolverInterface  $typeResolver
      * @param ValueResolverInterface $valueResolver
      */
     public function __construct(TypeResolverInterface $typeResolver,

@@ -38,7 +38,7 @@ class TwigTemplateOutputAdapter extends BaseFlattenOutputAdapter
 
     /**
      * @param \Twig_Environment $twig
-     * @param array $options
+     * @param array             $options
      */
     public function __construct(\Twig_Environment $twig, array $options = array())
     {

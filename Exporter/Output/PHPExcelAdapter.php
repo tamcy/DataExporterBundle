@@ -194,9 +194,7 @@ class PHPExcelAdapter extends BaseFlattenOutputAdapter
     }
 
     /**
-     * Returns the result produced by this output.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getResult()
     {

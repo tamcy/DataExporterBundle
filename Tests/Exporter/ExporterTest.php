@@ -54,7 +54,7 @@ Bar,Wong
             ->setOutput(new CSVAdapter())
             ->setDataSet($this->dataSet1)
             ->execute();
-            $result = $exporter->getResult();
+        $result = $exporter->getResult();
 
         $this->assertEquals('"First Name","Last Name",Room,Floor
 Foo,Chan,B,12

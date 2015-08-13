@@ -44,6 +44,7 @@ abstract class BaseFlattenOutputAdapter extends AbstractOutputAdapter
         if (!$prefixes) {
             return $column->getName();
         }
+
         return implode('.', $prefixes) . '.' . $column->getName();
     }
 
@@ -116,7 +117,7 @@ abstract class BaseFlattenOutputAdapter extends AbstractOutputAdapter
      * $record is an associative array with key equals to a unique column name.
      *
      * @param Column[] $columns The column
-     * @param array $record The record
+     * @param array    $record The record
      */
     abstract protected function writeRecordRow(array $columns, array $record);
 

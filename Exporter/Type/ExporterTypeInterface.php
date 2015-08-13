@@ -41,9 +41,9 @@ interface ExporterTypeInterface
      * Transforms the field value to the one as defined in the types.
      *
      * @param ValueResolverInterface $valueResolver
-     * @param mixed $data The source data
-     * @param string $fieldName The requested field name
-     * @param array $options The options
+     * @param mixed                  $data The source data
+     * @param string                 $fieldName The requested field name
+     * @param array                  $options The options
      * @return mixed The transformed value
      */
     public function getValue(ValueResolverInterface $valueResolver, $data, $fieldName, array $options);

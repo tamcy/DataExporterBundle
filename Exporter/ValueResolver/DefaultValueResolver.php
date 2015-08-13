@@ -40,6 +40,7 @@ class DefaultValueResolver implements ValueResolverInterface
                 }
             }
         }
+
         return $rawValue;
     }
 }
