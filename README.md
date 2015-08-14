@@ -4,16 +4,25 @@
 
 Data Exporter Bundle for Symfony2.
  
-## Basic Usage 
-
-Assume a variable `$items` storing 2 user profile objects:
+Assume the following table, which contains 2 user profile objects:
 
 | id            | firstName     | lastName      | age   |
 | ------------- | ------------- | ------------- | ----- |
 | 1             | Foo           | Chan          | 20    |
 | 2             | Bar           | Wong          | 17    |
 
+This is how the above table looks like in code:
+
+```
+$items = [
+    ['id' => 1, 'firstName' => 'Foo', 'lastName' => 'Chan', 'age' => 20],
+    ['id' => 2, 'firstName' => 'Bar', 'lastName' => 'Wong', 'age' => 17],
+];
+```
+
 Here `$items` is a variable containing a data set or collection. This exporter bundle allows you to have the data set converted to a given format, e.g. CSV or Excel.
+
+## Basic Usage 
 
 To use it, first enable the bundle in `AppKernel.php`.
  
@@ -91,6 +100,8 @@ Here is how a column is added:
 
 `$builder->add('id', 'string')`
 
+Users of the great [Symfony Form](http://symfony.com/doc/current/book/forms.html) component will find it familiar. This is intentional. 
+
  * The first parameter is the field name, which has to be unique among the same column set. By default, the library uses Symfony's PropertyAccess component to retrieve the value to export from the data object or array using this field name.
  * The second parameter is the field type. It can be a type name registered in the type registry (normally via the service tag), or a concrete instance implementing `Sparkson\DataExporterBundle\Exporter\Type\ExporterTypeInterface`. For example, you can write `$builder->add('id', new \Sparkson\DataExporterBundle\Exporter\Core\Type\StringType())` and the result will be the same.
  * The third parameter (not shown in the above example) is the options. The available options differ from field types. 
@@ -109,7 +120,7 @@ The `property_path` attribute overrides the default behaviour of using the colum
 $builder->add('id', 'string', ['property_path' => '[id]'])
 ```
 
-Field type does not retrieve a column value directly. Instead it passes a value retrieval request to the value resolver component which can be changed via `Exporter::setValueResolver()`. If unspecified, `Sparkson\DataExporterBundle\Exporter\ValueResolver\DefaultValueResolver` will be used as the default, which uses Symfony's PropertyAccess component to retrieve the column value. Thus property path can be any value understood by the PropertyAccess component when the default value resolver is used. This means that property of an inner object is also supported:   
+A field type does not retrieve a column value by itself. Instead it passes a value retrieval request to the value resolver component which can be changed via `Exporter::setValueResolver()`. If unspecified, `Sparkson\DataExporterBundle\Exporter\ValueResolver\DefaultValueResolver` will be used as the default, which uses Symfony's PropertyAccess component to retrieve the column value. Thus property path can be any value understood by the PropertyAccess component when the default value resolver is used. This means that property of an inner object is also supported:   
  
 ```php
 $builder->add('author_name', 'string', ['property_path' => 'author.name'])
@@ -150,14 +161,14 @@ Here are the field types provided in this bundle. Classes are defined under the 
 Here shows the use of the `MapType`:
 ```php
 $builder->add('user_type', 'map', ['map' => [
-  'U' => 'User',
-  'A' => 'Administrator',
-  'M' => 'Moderator',
+    'U' => 'User',
+    'A' => 'Administrator',
+    'M' => 'Moderator',
 ]]);
 ```
 
-To put it in another way, field types are like value transformers:
- * `MapType` expects a string which should be a key of the provided map. The value of the respective key in the map will be returned. Similarly,
+To put it another way, field types are like value transformers:
+ * `MapType` expects a string which should be a key of the provided map. During export, `MapType` transforms the column value to the mapped value. Similarly,
  * `BooleanType` expects a boolean and will transform it into strings like "Yes/No", "Enabled/Disabled" depending on the configuration. 
  * `DateTimeType` transforms the original field value into a formatted datetime. 
  * `StringType` casts the value into a string. In addition, it provides an optional `format` configuration which will be passed to PHP's `sprintf()` function when set.
@@ -168,7 +179,7 @@ Lastly, you can add your own field type. Just refer to the source code of existi
 
 ## Defining exporter fields in a separate class
 
-In addition to build an exporter instance using the builder, it is also possible to define exporter fields in a separate class.
+In addition to constructing an exporter instance using the builder, it is also possible to define exporter fields in a separate class.
 
 ```php
 <?php
@@ -204,7 +215,7 @@ $profileExporter = $factory->createExporter('user_profile');
 
 ## Output adapters
 
-When `execute()` is called, the exporter iterates the data set one by one, each with the defined column set. However, extraction of column values from a record row is the job of the field type. Similarly, the exporter does not handle the writing of the extracted values itself. Instead, it delegates the job to an **output adapter**.
+When `execute()` is called, the exporter iterates the data set one by one, each with the defined column set. However, extraction of column values from a record row is the job of the field type. Similarly, the exporter does not handle the writing of the extracted values itself. Such job is delegated to an **output adapter**.
 
 The following output adapters are supplied in this library:
  * `CSVAdapter`, which uses PHP's own `fputcsv()` function to write data.
@@ -217,10 +228,10 @@ Unlike field types, output adapters are not services, so you need to create them
 By default, `CSVAdapter` writes data to memory during `$exporter->execute()` which can be retrieved with the `getResult()` method. In the following example, `CSVAdapter` is configured to write the export result to a file instead, and will not keep the result (i.e. it won't read the data back) for further retrieval via `getResult()`:
 
 ```php
-$exporter->setOutput(new CSVAdapter(array(
-    'output' => __DIR__.'/output.csv', // sets output file 
-    'keep_result' => false,            // do not keep result for getResult()
-)));
+$exporter->setOutput(new CSVAdapter([
+    'filename' => __DIR__.'/output.csv', // sets output filename
+    'keep_result' => false,              // do not keep result for getResult()
+]));
 ```
 
 With `TwigTemplateOutputAdapter`, you can pass the exported data to a Twig template for further processing. This class requires the `Twig_Environment` instance as the first constructor argument. Here is a usage example:     
@@ -261,7 +272,7 @@ $columnSet->getChild('lastName')->setPosition(2);
 ```
 Note that position is not guaranteed to be unique. It is legitimate to have nonconsecutive position, or two columns with the same position. 
 
-Alternately, you may re-order the columns via `setColumnOrders()`:
+Alternatively, you may re-order the columns via `setColumnOrders()`:
 
 ```php
 $columnSet->setColumnOrders(['age', 'lastName', 'firstName', 'id']);
