@@ -44,7 +44,7 @@ class PHPExcelAdapter extends BaseFlattenOutputAdapter
         parent::configureOptions($resolver);
 
         $resolver->setDefaults(array(
-            'output' => null,
+            'filename' => null,
             'title' => 'Exported data',
             'keep_result' => true,
             'header' => true,
@@ -175,11 +175,11 @@ class PHPExcelAdapter extends BaseFlattenOutputAdapter
     {
         $this->initializeWriter();
 
-        if (null === $this->options['output']) {
+        if (null === $this->options['filename']) {
             $file = tempnam(sys_get_temp_dir(), 'phpexcel_export');
             $isTempFile = true;
         } else {
-            $file = $this->options['output'];
+            $file = $this->options['filename'];
             $isTempFile = false;
         }
 

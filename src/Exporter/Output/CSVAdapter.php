@@ -24,7 +24,7 @@ class CSVAdapter extends BaseFlattenOutputAdapter
         parent::configureOptions($resolver);
 
         $resolver->setDefaults(array(
-            'output' => 'php://temp/maxmemory:5242880',
+            'filename' => 'php://temp/maxmemory:5242880',
             'keep_result' => true,
             'delimiter' => ',',
             'enclosure' => '"',
@@ -40,7 +40,7 @@ class CSVAdapter extends BaseFlattenOutputAdapter
     public function begin()
     {
         parent::begin();
-        $this->handle = fopen($this->options['output'], 'r+');
+        $this->handle = fopen($this->options['filename'], 'r+');
         $this->data = null;
     }
 
