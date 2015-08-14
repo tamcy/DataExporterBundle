@@ -11,7 +11,7 @@ Assume the following table, which contains 2 user profile objects:
 | 1             | Foo           | Chan          | 20    |
 | 2             | Bar           | Wong          | 17    |
 
-This is how the above table looks like in code:
+The data structure would look like this in code:
 
 ```
 $items = [
@@ -20,11 +20,11 @@ $items = [
 ];
 ```
 
-Here `$items` is a variable containing a data set or collection. This exporter bundle allows you to have the data set converted to a given format, e.g. CSV or Excel.
+This exporter bundle allows you to export the data set (`$items`) to another format, like CSV or Excel.
 
 ## Basic Usage 
 
-To use it, first enable the bundle in `AppKernel.php`.
+Firstly, enable the bundle in `AppKernel.php`:
  
 ```php
 $bundles = array(
@@ -33,7 +33,7 @@ $bundles = array(
 );
 ```
 
-Now assume you are in a controller action. Here is how the exporter is used:  
+Now assume you are in a controller action. Here is how to use the exporter:  
 
 ```php
 public function exportAction(Request $request)
@@ -79,7 +79,7 @@ Id,FirstName,LastName,Age
 2,Bar,Wong,17
 ```
 
-This illustrates the basic usage of the exporter. Before going on, I want to add that like `add()`, you can chain the methods like below:
+This illustrates the basic usage of the exporter. Note that methods can be chained as below:
 
 ```php
 $result = $builder
@@ -96,31 +96,33 @@ $result = $builder
 
 ## Defining the column structure
 
-Here is how a column is added:
+The  exporter builder allows you to define the column set to be exported using `$builder->add()`. For example:
 
-`$builder->add('id', 'string')`
+```php
+$builder->add('id', 'string', []);
+```
 
-Users of the great [Symfony Form](http://symfony.com/doc/current/book/forms.html) component will find it familiar. This is intentional. 
+Users of the great [Symfony Form](http://symfony.com/doc/current/book/forms.html) component will find this syntax familiar. This is intentional. 
 
- * The first parameter is the field name, which has to be unique among the same column set. By default, the library uses Symfony's PropertyAccess component to retrieve the value to export from the data object or array using this field name.
- * The second parameter is the field type. It can be a type name registered in the type registry (normally via the service tag), or a concrete instance implementing `Sparkson\DataExporterBundle\Exporter\Type\ExporterTypeInterface`. For example, you can write `$builder->add('id', new \Sparkson\DataExporterBundle\Exporter\Core\Type\StringType())` and the result will be the same.
- * The third parameter (not shown in the above example) is the options. The available options differ from field types. 
+ * The first parameter is the field name, which has to be unique among the same column set.
+ * The second parameter is the field type. It can be a type name registered in the type registry (normally via the service tag), or an object implementing `Sparkson\DataExporterBundle\Exporter\Type\ExporterTypeInterface`. This means that instead of passing the type name you could also write `$builder->add('id', new \Sparkson\DataExporterBundle\Exporter\Core\Type\StringType())` and the result will be the same.
+ * The third parameter is the options. 
 
-That said, a few option attributes are common among all types.
+The `options` argument allows you to further configure the behaviour of a type. The allowed options are different among field types, with a few exceptions like `label` and `property_path`.
 
 ### label
 
-Each column has a label, which will become the caption in the header row. If unspecified, the label will be generated from the column name. You can override this default behaviour by specifying a value to the `label` attribute.   
+Each column has a label, which is used as the caption/title in the header row. If unspecified, the label will be generated from the column name.
     
 ### property_path
 
-The `property_path` attribute overrides the default behaviour of using the column name as the property path to retrieve value of the column. For example, you may want to write this when the data is an array: 
+The `property_path` attribute overrides the default behaviour of using field names as the property path to retrieve the column values. For example, you may want to write this when the record is an array: 
 
 ```php
 $builder->add('id', 'string', ['property_path' => '[id]'])
 ```
 
-A field type does not retrieve a column value by itself. Instead it passes a value retrieval request to the value resolver component which can be changed via `Exporter::setValueResolver()`. If unspecified, `Sparkson\DataExporterBundle\Exporter\ValueResolver\DefaultValueResolver` will be used as the default, which uses Symfony's PropertyAccess component to retrieve the column value. Thus property path can be any value understood by the PropertyAccess component when the default value resolver is used. This means that property of an inner object is also supported:   
+A field type does not retrieve a column value by itself. Instead it passes a value retrieval request to the value resolver component which can be changed via `Exporter::setValueResolver()`. If unspecified, `Sparkson\DataExporterBundle\Exporter\ValueResolver\DefaultValueResolver` will be used. This `DefaultValueResolver` uses Symfony's [PropertyAccess](http://symfony.com/doc/current/components/property_access/index.html) component to retrieve the column value. This means that you can write the  following with the default value resolver:
  
 ```php
 $builder->add('author_name', 'string', ['property_path' => 'author.name'])
@@ -130,15 +132,16 @@ $builder->add('author_name', 'string', ['property_path' => 'author.name'])
 
 Similar to field types, additional options can be supplied to value resolvers. This can be done through the `resolver_options` array in an field type.
 
-For example, `DefaultValueResolver` supports a `filter` option which accepts an array of either:
- * a string which is a simple PHP function; or
+For example, `DefaultValueResolver` supports a `filter` option which accepts an array of either
+
+ * a string which is a simple PHP function that accepts the exported value as the first parameter; or
  * an instance implementing `Sparkson\DataExporterBundle\Exporter\ValueResolver\Filter\FilterInterface`. One example is the `CustomFilter` class in this library.
 
-Filters serve as value preprocessors, mainly for sanitizing values using functions like `trim()`, `ltrim()` etc. AFTER the value is retried and BEFORE passing it to the field type for final output.
+Filters serve like value pre-processors, mainly for sanitizing values using functions like `trim()`, `ltrim()` etc. *after* the value is retrieved and *before* the value is passed it to the field type for final output.
 
 ```php
 $builder->add('description', 'string', ['resolver_options' => ['filters' => ['trim']]]);
-// OR
+// is equivalent to 
 $builder->add('description', 'string', ['resolver_options' => ['filters' => [ new CustomFilter(function($value) {
     return trim($value);
 })]]]);
@@ -173,13 +176,13 @@ To put it another way, field types are like value transformers:
  * `DateTimeType` transforms the original field value into a formatted datetime. 
  * `StringType` casts the value into a string. In addition, it provides an optional `format` configuration which will be passed to PHP's `sprintf()` function when set.
 
-For details on how a specific type works and their available options, please consult the source files.
+Check the source files for details on how a specific type works and their available options.
 
-Lastly, you can add your own field type. Just refer to the source code of existing types on how to implement one, and refer to `services.yml` on how to register the types to the type registry so that you can refer to it merely by its name.
+Lastly, you can add your own field type to the type registry. Just refer to the source code of existing types on how to implement one, and refer to `services.yml` on how to register the types to the type registry so that you can use it by its name.
 
 ## Defining exporter fields in a separate class
 
-In addition to constructing an exporter instance using the builder, it is also possible to define exporter fields in a separate class.
+Just like Symfony's Form component, you can also define exporter fields in a separate class:
 
 ```php
 <?php
@@ -215,7 +218,7 @@ $profileExporter = $factory->createExporter('user_profile');
 
 ## Output adapters
 
-When `execute()` is called, the exporter iterates the data set one by one, each with the defined column set. However, extraction of column values from a record row is the job of the field type. Similarly, the exporter does not handle the writing of the extracted values itself. Such job is delegated to an **output adapter**.
+When `execute()` is called, the exporter instance iterates the data set one by one, each with the defined column set. As mentioned before, extraction of column values from a record row is the job of the field type (with the help of value resolver). Similarly, the exporter instance does not handle the writing of the extracted values itself. Such job is delegated to an **output adapter**.
 
 The following output adapters are supplied in this library:
  * `CSVAdapter`, which uses PHP's own `fputcsv()` function to write data.
@@ -234,7 +237,7 @@ $exporter->setOutput(new CSVAdapter([
 ]));
 ```
 
-With `TwigTemplateOutputAdapter`, you can pass the exported data to a Twig template for further processing. This class requires the `Twig_Environment` instance as the first constructor argument. Here is a usage example:     
+With `TwigTemplateOutputAdapter`, you can pass the exported data to a Twig template for further processing. This class requires the `Twig_Environment` instance as the first constructor argument.
 
 ```php
 $twig = $this->get('twig'); // retrieve the Twig_Environment instance from the service container
@@ -245,7 +248,7 @@ $exporter->setOutput(new TwigTemplateOutputAdapter($twig, [
 
 Note that the default template located at `Resources/view/exporter/template.html.twig` will be used if no template is given. You can use this file to learn writing your own template.
 
-Hint: You can define your own output adapter services. For example, you can define a service for `TwigTemplateOutputAdapter` which uses your own template. After that the above code example can be simplified as follow:
+Hint: You can define your own output adapter services. For example, you can define a service for `TwigTemplateOutputAdapter` that uses your own template. After that the above code example can be simplified as follow:
   
 ```
 $exporter->setOutput($this->get('app.exporter.output_adapter.twig'));
@@ -265,12 +268,12 @@ app.exporter.output_adapter.twig:
 
 ### Changing column properties
 
-By default, columns are exported in the order when they are added. But you may want to modify the column order after the exporter is built. Here's how:
+By default, columns are exported in the order they were added. But you may want to modify the column order after the exporter is built. Here's how:
 ```php
 $columnSet = $exporter->getColumns();
 $columnSet->getChild('lastName')->setPosition(2);
 ```
-Note that position is not guaranteed to be unique. It is legitimate to have nonconsecutive position, or two columns with the same position. 
+Note that `position` is merely a sorting hint. The library will not modify other columns' positions to prevent clashing. In other words, it is possible for a column set to have columns with nonconsecutive position, or more than one columns with the same position. 
 
 Alternatively, you may re-order the columns via `setColumnOrders()`:
 
@@ -292,7 +295,7 @@ $columnSet->setColumnOrders(['lastName', 'firstName'], true);
 // "id" and "age" are disabled.
 ```
 
-This is especially useful when you provide an UI for users to choose which columns to export. Instead of adding ifs around the builder's add field statements, just add all of them and disable the unwanted ones after the exporter is built. 
+This is especially useful when you provide an UI for users to choose which columns to export. Instead of adding ifs around the builder's add field statements, just add all of them first and disable the unwanted ones after the exporter is built. 
 
 **Important: Column properties cannot be changed once `$exporter->execute()` is called.**
 
@@ -319,7 +322,7 @@ foreach ($iterableResult as $row) {
 }
 ```
 
-We can adopted this technique using of PHP's [Generator](http://php.net/manual/en/language.generators.overview.php), like so:
+We can adopt this technique using of PHP's [generator](http://php.net/manual/en/language.generators.overview.php), like so:
 ```php
 $getDataSetIterator = function()
 {
