@@ -40,7 +40,7 @@ class CSVAdapter extends BaseFlattenOutputAdapter
     public function begin()
     {
         parent::begin();
-        $this->handle = fopen($this->options['filename'], 'r+');
+        $this->handle = fopen($this->options['filename'], 'w+');
         $this->data = null;
     }
 
