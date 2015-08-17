@@ -7,7 +7,7 @@ use Sparkson\DataExporterBundle\Exporter\Column\ColumnSet;
 use Sparkson\DataExporterBundle\Exporter\Core\Type\RawType;
 use Sparkson\DataExporterBundle\Exporter\Core\Type\StringType;
 use Sparkson\DataExporterBundle\Exporter\Exporter;
-use Sparkson\DataExporterBundle\Exporter\Output\CSVAdapter;
+use Sparkson\DataExporterBundle\Exporter\OutputAdapter\CSVAdapter;
 
 class ExporterTest extends \PHPUnit_Framework_TestCase
 {
@@ -26,7 +26,7 @@ class ExporterTest extends \PHPUnit_Framework_TestCase
         $exporter = new Exporter();
         $exporter
             ->setColumns($columns)
-            ->setOutput(new CSVAdapter())
+            ->setOutputAdapter(new CSVAdapter())
             ->setDataSet($this->dataSet1)
             ->execute();
         $result = $exporter->getResult();
@@ -51,7 +51,7 @@ Bar,Wong
         $exporter = new Exporter();
         $exporter
             ->setColumns($columns)
-            ->setOutput(new CSVAdapter())
+            ->setOutputAdapter(new CSVAdapter())
             ->setDataSet($this->dataSet1)
             ->execute();
         $result = $exporter->getResult();
@@ -72,7 +72,7 @@ Bar,Wong,A,14
         $exporter = new Exporter();
         $exporter
             ->setColumns($columns)
-            ->setOutput(new CSVAdapter())
+            ->setOutputAdapter(new CSVAdapter())
             ->setDataSet($this->dataSet1)
             ->execute();
         $result = $exporter->getResult();
@@ -94,7 +94,7 @@ Wong,Bar
         $exporter = new Exporter();
         $exporter
             ->setColumns($columns)
-            ->setOutput(new CSVAdapter())
+            ->setOutputAdapter(new CSVAdapter())
             ->setDataSet($this->dataSet1)
             ->execute();
         $result = $exporter->getResult();

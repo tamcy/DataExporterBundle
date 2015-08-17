@@ -6,7 +6,7 @@ namespace Sparkson\DataExporterBundle\Tests\Exporter;
 use Sparkson\DataExporterBundle\Exporter\Core\Type\StringType;
 use Sparkson\DataExporterBundle\Exporter\ExporterBuilder;
 use Sparkson\DataExporterBundle\Exporter\ExporterFactory;
-use Sparkson\DataExporterBundle\Exporter\Output\CSVAdapter;
+use Sparkson\DataExporterBundle\Exporter\OutputAdapter\CSVAdapter;
 use Sparkson\DataExporterBundle\Exporter\Type\TypeRegistry;
 use Sparkson\DataExporterBundle\Exporter\ValueResolver\DefaultValueResolver;
 use Sparkson\DataExporterBundle\Tests\Exporter\Fixtures\AddressType;
@@ -93,7 +93,7 @@ class ExporterBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($addressColumn->hasChild('block'));
 
         $exporter
-            ->setOutput(new CSVAdapter())
+            ->setOutputAdapter(new CSVAdapter())
             ->setDataSet($this->dataSet1)
             ->execute();
         $result = $exporter->getResult();
@@ -140,7 +140,7 @@ Foo,Chan,B,12,7
             ->getExporter();
 
         $result = $exporter
-            ->setOutput(new CSVAdapter())
+            ->setOutputAdapter(new CSVAdapter())
             ->setDataSet($this->dataSet1)
             ->execute()
             ->getResult();

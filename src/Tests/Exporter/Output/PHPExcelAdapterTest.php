@@ -6,7 +6,7 @@ use Sparkson\DataExporterBundle\Exporter\Column\Column;
 use Sparkson\DataExporterBundle\Exporter\Column\ColumnSet;
 use Sparkson\DataExporterBundle\Exporter\Core\Type\StringType;
 use Sparkson\DataExporterBundle\Exporter\Exporter;
-use Sparkson\DataExporterBundle\Exporter\Output\PHPExcelAdapter;
+use Sparkson\DataExporterBundle\Exporter\OutputAdapter\PHPExcelAdapter;
 
 class PHPExcelAdapterTest extends \PHPUnit_Framework_TestCase
 {
@@ -24,7 +24,7 @@ class PHPExcelAdapterTest extends \PHPUnit_Framework_TestCase
         $exporter = new Exporter();
         $exporter
             ->setColumns($columns)
-            ->setOutput(new PHPExcelAdapter(array(
+            ->setOutputAdapter(new PHPExcelAdapter(array(
                 'writer' => 'CSV',
             )))
             ->setDataSet($this->dataSet);

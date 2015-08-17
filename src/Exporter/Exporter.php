@@ -6,7 +6,7 @@ use Sparkson\DataExporterBundle\Exporter\Column\Column;
 use Sparkson\DataExporterBundle\Exporter\Column\ColumnCollectionInterface;
 use Sparkson\DataExporterBundle\Exporter\Column\ColumnSet;
 use Sparkson\DataExporterBundle\Exporter\Exception\InvalidArgumentException;
-use Sparkson\DataExporterBundle\Exporter\Output\OutputAdapterInterface;
+use Sparkson\DataExporterBundle\Exporter\OutputAdapter\OutputAdapterInterface;
 use Sparkson\DataExporterBundle\Exporter\ValueResolver\DefaultValueResolver;
 use Sparkson\DataExporterBundle\Exporter\ValueResolver\ValueResolverInterface;
 
@@ -25,7 +25,7 @@ class Exporter
     /**
      * @var OutputAdapterInterface
      */
-    private $output;
+    private $outputAdapter;
 
     /**
      * @var array
@@ -90,9 +90,9 @@ class Exporter
      * @param OutputAdapterInterface $outputAdapter
      * @return $this
      */
-    public function setOutput(OutputAdapterInterface $outputAdapter)
+    public function setOutputAdapter(OutputAdapterInterface $outputAdapter)
     {
-        $this->output = $outputAdapter;
+        $this->outputAdapter = $outputAdapter;
 
         return $this;
     }
@@ -100,9 +100,9 @@ class Exporter
     /**
      * @return OutputAdapterInterface
      */
-    public function getOutput()
+    public function getOutputAdapter()
     {
-        return $this->output;
+        return $this->outputAdapter;
     }
 
     /**
@@ -142,14 +142,14 @@ class Exporter
             throw new InvalidArgumentException('The supplied data is not traversable.');
         }
 
-        $this->output->begin();
+        $this->outputAdapter->begin();
 
         foreach ($this->dataSet as $idx => $a) {
             $record = $this->processRow($columns, $a);
-            $this->output->writeRecord($columns, $record);
+            $this->outputAdapter->writeRecord($columns, $record);
         }
 
-        $this->output->end();
+        $this->outputAdapter->end();
 
         return $this;
     }
@@ -192,7 +192,7 @@ class Exporter
      */
     public function getResult()
     {
-        return $this->output->getResult();
+        return $this->outputAdapter->getResult();
     }
 
 }

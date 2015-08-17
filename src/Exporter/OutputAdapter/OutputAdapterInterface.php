@@ -1,6 +1,6 @@
 <?php
 
-namespace Sparkson\DataExporterBundle\Exporter\Output;
+namespace Sparkson\DataExporterBundle\Exporter\OutputAdapter;
 
 use Sparkson\DataExporterBundle\Exporter\Column\Column;
 

@@ -6,7 +6,7 @@ use Sparkson\DataExporterBundle\Exporter\Column\Column;
 use Sparkson\DataExporterBundle\Exporter\Column\ColumnSet;
 use Sparkson\DataExporterBundle\Exporter\Core\Type\StringType;
 use Sparkson\DataExporterBundle\Exporter\Exporter;
-use Sparkson\DataExporterBundle\Exporter\Output\TwigTemplateOutputAdapter;
+use Sparkson\DataExporterBundle\Exporter\OutputAdapter\TwigTemplateOutputAdapter;
 
 class TwigTemplateOutputAdapterTest extends \PHPUnit_Framework_TestCase
 {
@@ -28,7 +28,7 @@ class TwigTemplateOutputAdapterTest extends \PHPUnit_Framework_TestCase
         $exporter = new Exporter();
         $exporter
             ->setColumns($columns)
-            ->setOutput(new TwigTemplateOutputAdapter($twig, ['template' => 'template.html.twig']))
+            ->setOutputAdapter(new TwigTemplateOutputAdapter($twig, ['template' => 'template.html.twig']))
             ->setDataSet($this->dataSet)
             ->execute();
 
