@@ -15,7 +15,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  *
  * @author Tamcy <tamcyhk@outlook.com>
  */
-abstract class BaseFlattenOutputAdapter extends AbstractOutputAdapter
+abstract class BaseFlattenAdapter extends AbstractAdapter
 {
     private $waitForFirstRecord = true;
 

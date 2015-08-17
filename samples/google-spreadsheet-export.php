@@ -8,7 +8,7 @@ use Sparkson\DataExporterBundle\Exporter\Column\Column;
 use Sparkson\DataExporterBundle\Exporter\Column\ColumnSet;
 use Sparkson\DataExporterBundle\Exporter\Core\Type\StringType;
 use Sparkson\DataExporterBundle\Exporter\Exporter;
-use Sparkson\DataExporterBundle\Exporter\Output\GoogleSpreadsheetOutputAdapter;
+use Sparkson\DataExporterBundle\Exporter\OutputAdapter\GoogleSpreadsheetAdapter;
 
 // Working example of the GoogleSpreadsheetOutputAdapter class.
 // Usage:
@@ -59,7 +59,7 @@ $dataSet = array(
 // ========================================================
 
 
-$outputAdapter = new GoogleSpreadsheetOutputAdapter($worksheet);
+$outputAdapter = new GoogleSpreadsheetAdapter($worksheet);
 $columns = new ColumnSet();
 $columns->addChild(new Column('firstName', new StringType(), array('property_path' => '[firstName]')));
 $columns->addChild(new Column('lastName', new StringType(), array('property_path' => '[lastName]')));
@@ -68,6 +68,6 @@ $columns->addChild(new Column('age', new StringType(), array('property_path' => 
 $exporter = new Exporter();
 $exporter
     ->setColumns($columns)
-    ->setOutput($outputAdapter)
+    ->setOutputAdapter($outputAdapter)
     ->setDataSet($dataSet)
     ->execute();

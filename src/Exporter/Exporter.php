@@ -6,7 +6,7 @@ use Sparkson\DataExporterBundle\Exporter\Column\Column;
 use Sparkson\DataExporterBundle\Exporter\Column\ColumnCollectionInterface;
 use Sparkson\DataExporterBundle\Exporter\Column\ColumnSet;
 use Sparkson\DataExporterBundle\Exporter\Exception\InvalidArgumentException;
-use Sparkson\DataExporterBundle\Exporter\OutputAdapter\OutputAdapterInterface;
+use Sparkson\DataExporterBundle\Exporter\OutputAdapter\AdapterInterface;
 use Sparkson\DataExporterBundle\Exporter\ValueResolver\DefaultValueResolver;
 use Sparkson\DataExporterBundle\Exporter\ValueResolver\ValueResolverInterface;
 
@@ -23,7 +23,7 @@ class Exporter
     private $columns;
 
     /**
-     * @var OutputAdapterInterface
+     * @var AdapterInterface
      */
     private $outputAdapter;
 
@@ -87,10 +87,10 @@ class Exporter
     }
 
     /**
-     * @param OutputAdapterInterface $outputAdapter
+     * @param AdapterInterface $outputAdapter
      * @return $this
      */
-    public function setOutputAdapter(OutputAdapterInterface $outputAdapter)
+    public function setOutputAdapter(AdapterInterface $outputAdapter)
     {
         $this->outputAdapter = $outputAdapter;
 
@@ -98,7 +98,7 @@ class Exporter
     }
 
     /**
-     * @return OutputAdapterInterface
+     * @return AdapterInterface
      */
     public function getOutputAdapter()
     {

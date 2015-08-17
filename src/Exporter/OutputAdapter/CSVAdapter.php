@@ -10,7 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  *
  * @author Tamcy <tamcyhk@outlook.com>
  */
-class CSVAdapter extends BaseFlattenOutputAdapter
+class CSVAdapter extends BaseFlattenAdapter
 {
     protected $handle;
 

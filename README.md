@@ -56,7 +56,7 @@ public function exportAction(Request $request)
     $exporter = $builder->getExporter();
     
     // Assigns an output adapter. Here we use the CSV adapter that utilizes PHP's fputcsv() function.
-    $exporter->setOutput(new \Sparkson\DataExporterBundle\Exporter\Output\CSVAdapter());
+    $exporter->setOutputAdapter(new \Sparkson\DataExporterBundle\Exporter\OutputAdapter\CSVAdapter());
     
     // Finally, sets the variable containing the data set to export ($items is assumed here).
     $exporter->setDataSet($items);
@@ -88,7 +88,7 @@ $result = $builder
     ->add('lastName', 'string')
     ->add('age', 'string')
     ->getExporter() // this returns the Exporter instance
-    ->setOutput(new \Sparkson\DataExporterBundle\Exporter\Output\CSVAdapter());
+    ->setOutputAdapter(new \Sparkson\DataExporterBundle\Exporter\OutputAdapter\CSVAdapter());
     ->setDataSet($items)
     ->execute()
     ->getResult();
@@ -222,43 +222,43 @@ When `execute()` is called, the exporter instance iterates the data set one by o
 
 The following output adapters are supplied in this library:
  * `CSVAdapter`, which uses PHP's own `fputcsv()` function to write data.
- * `GoogleSpreadsheetOutputAdapter`, which uses [asimlqt/php-google-spreadsheet-client](https://github.com/asimlqt/php-google-spreadsheet-client) to write data to Google Spreadsheet.
+ * `GoogleSpreadsheetAdapter`, which uses [asimlqt/php-google-spreadsheet-client](https://github.com/asimlqt/php-google-spreadsheet-client) to write data to Google Spreadsheet.
  * `PHPExcelAdapter`, which utilizes the [PHPExcel](https://github.com/PHPOffice/PHPExcel) library to write data.
- * `TwigTemplateOutputAdapter`, which renders the result using a customizable twig template.
+ * `TwigAdapter`, which renders the result using a customizable twig template.
 
 Unlike field types, output adapters are not services, so you need to create them manually. Refer to their source codes for details on constructor arguments and available options. Here shows some brief usage examples:
 
 By default, `CSVAdapter` writes data to memory during `$exporter->execute()` which can be retrieved with the `getResult()` method. In the following example, `CSVAdapter` is configured to write the export result to a file instead, and will not keep the result (i.e. it won't read the data back) for further retrieval via `getResult()`:
 
 ```php
-$exporter->setOutput(new CSVAdapter([
+$exporter->setOutputAdapter(new CSVAdapter([
     'filename' => __DIR__.'/output.csv', // sets output filename
     'keep_result' => false,              // do not keep result for getResult()
 ]));
 ```
 
-With `TwigTemplateOutputAdapter`, you can pass the exported data to a Twig template for further processing. This class requires the `Twig_Environment` instance as the first constructor argument.
+With `TwigAdapter`, you can pass the exported data to a Twig template for further processing. This class requires the `Twig_Environment` instance as the first constructor argument.
 
 ```php
 $twig = $this->get('twig'); // retrieve the Twig_Environment instance from the service container
-$exporter->setOutput(new TwigTemplateOutputAdapter($twig, [
+$exporter->setOutputAdapter(new TwigAdapter($twig, [
     'template' => '@AppBundle/exporter/my_exporter_template.html.twig',
 ]));
 ```
 
 Note that the default template located at `Resources/view/exporter/template.html.twig` will be used if no template is given. You can use this file to learn writing your own template.
 
-Hint: You can define your own output adapter services. For example, you can define a service for `TwigTemplateOutputAdapter` that uses your own template. After that the above code example can be simplified as follow:
+Hint: You can define your own output adapter services. For example, you can define a service for `TwigAdapter` that uses your own template. After that the above code example can be simplified as follow:
   
 ```
-$exporter->setOutput($this->get('app.exporter.output_adapter.twig'));
+$exporter->setOutputAdapter($this->get('app.exporter.output_adapter.twig'));
 ```
 
 Here is how the service is defined in `services.yml`:
 
 ```php
 app.exporter.output_adapter.twig:
-    class: Sparkson\DataExporterBundle\Exporter\Output\TwigTemplateOutputAdapter
+    class: Sparkson\DataExporterBundle\Exporter\OutputAdapter\TwigAdapter
     arguments:
         - @twig
         - { template: "@AppBundle/exporter/my_exporter_template.html.twig" }

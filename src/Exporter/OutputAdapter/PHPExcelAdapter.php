@@ -13,7 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  *
  * @author Tamcy <tamcyhk@outlook.com>
  */
-class PHPExcelAdapter extends BaseFlattenOutputAdapter
+class PHPExcelAdapter extends BaseFlattenAdapter
 {
     /**
      * @var \PHPExcel_Writer_IWriter

@@ -14,7 +14,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  *
  * @author Tamcy <tamcyhk@outlook.com>
  */
-class TwigTemplateOutputAdapter extends BaseFlattenOutputAdapter
+class TwigAdapter extends BaseFlattenAdapter
 {
     /**
      * @var \Twig_Environment

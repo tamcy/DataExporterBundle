@@ -11,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  *
  * @author Tamcy <tamcyhk@outlook.com>
  */
-abstract class AbstractOutputAdapter implements OutputAdapterInterface
+abstract class AbstractAdapter implements AdapterInterface
 {
     /**
      * @var array Configuration options

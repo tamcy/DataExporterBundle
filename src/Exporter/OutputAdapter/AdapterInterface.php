@@ -9,7 +9,7 @@ use Sparkson\DataExporterBundle\Exporter\Column\Column;
  *
  * @author Tamcy <tamcyhk@outlook.com>
  */
-interface OutputAdapterInterface
+interface AdapterInterface
 {
     /**
      * Called when the exporter begins exporting data.

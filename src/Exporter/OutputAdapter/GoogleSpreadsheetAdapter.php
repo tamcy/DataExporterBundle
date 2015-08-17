@@ -14,7 +14,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  *
  * @author Tamcy <tamcyhk@outlook.com>
  */
-class GoogleSpreadsheetOutputAdapter extends BaseFlattenOutputAdapter
+class GoogleSpreadsheetAdapter extends BaseFlattenAdapter
 {
     /**
      * @var \Google\Spreadsheet\Worksheet
