@@ -1,5 +1,12 @@
 <?php
 
+// !!! WARNING !!!
+// This is merely a sample script to demonstrate how to use the library
+// to export data to Google Spreadsheet. As this code has access to the
+// Google Drive account you provide, you must make sure you know what
+// is happening behind the scene. I am not responsible for any loss of
+// data caused by running this script.
+
 require '../vendor/autoload.php';
 
 use Google\Spreadsheet\DefaultServiceRequest;
