@@ -1,5 +1,7 @@
 # DataExporterBundle
 
+Note: The API is not stable and is subject to change. 
+
 Data Exporter Bundle for Symfony2.
  
 Assume the following table, which contains 2 user profile objects:
@@ -116,26 +118,28 @@ The `options` argument allows you to further configure the behaviour of a type. 
 ### label
 
 Each column has a label, which is used as the caption/title in the header row. If unspecified, the label will be generated from the column name.
-    
+
 ### property_path
 
-The `property_path` attribute overrides the default behaviour of using field names as the property path to retrieve the column values. For example, you may want to write this when the record is an array: 
+The `property_path` attribute overrides the default behaviour of using field name as the property path to retrieve the column values For example, you may want to write this when the record is an array: 
 
 ```php
 $builder->add('id', 'string', ['property_path' => '[id]'])
 ```
 
-A field type does not retrieve a column value by itself. Instead it passes a value retrieval request to the value resolver component which can be changed via `Exporter::setValueResolver()`. If unspecified, `Sparkson\DataExporterBundle\Exporter\ValueResolver\DefaultValueResolver` will be used. This `DefaultValueResolver` uses Symfony's [PropertyAccess](http://symfony.com/doc/current/components/property_access/index.html) component to retrieve the column value. This means that you can write the  following with the default value resolver:
- 
+A field type does not retrieve a column value by itself. Instead it passes the `property_path` value to the value resolver component and doesn't care how the value is retrieved. By default, `\Sparkson\DataExporterBundle\Exporter\ValueResolver\DefaultValueResolver` is used which fetches record values with the help of Symfony's [PropertyAccess](http://symfony.com/doc/current/components/property_access/index.html) component. This means that you can write the  following:
+
 ```php
 $builder->add('author_name', 'string', ['property_path' => 'author.name'])
 ```
 
+Although it seems unlikely that you will want to roll your own value resolver, it is possible to tell the exporter to use your own value resolver by calling  `Exporter::setValueResolver()`. 
+
 ### resolver_options
 
-Similar to field types, additional options can be supplied to value resolvers. This can be done through the `resolver_options` array in an field type.
+Additional options can be passed to the active value resolver for each column via the `resolver_options` key.
 
-For example, `DefaultValueResolver` supports a `filter` option which accepts an array of either
+`DefaultValueResolver` supports a `filters` option which accepts an array of either
 
  * a string which is a simple PHP function that accepts the exported value as the first parameter; or
  * an instance implementing `Sparkson\DataExporterBundle\Exporter\ValueResolver\Filter\FilterInterface`. One example is the `CustomFilter` class in this library.
@@ -152,7 +156,7 @@ $builder->add('description', 'string', ['resolver_options' => ['filters' => [ ne
 
 ### Field types
 
-Here are the field types provided in this bundle. Classes are defined under the `Sparkson\DataExporterBundle\Exporter\Core\Type` namespace. 
+Below are the field types provided in this bundle. Classes are defined under the `Sparkson\DataExporterBundle\Exporter\Core\Type` namespace. 
 
 | Class name        | Type          |
 | ----------------- | ------------- |
@@ -174,6 +178,7 @@ $builder->add('user_type', 'map', ['map' => [
 ```
 
 To put it another way, field types are like value transformers:
+
  * `MapType` expects a string which should be a key of the provided map. During export, `MapType` transforms the column value to the mapped value. Similarly,
  * `BooleanType` expects a boolean and will transform it into strings like "Yes/No", "Enabled/Disabled" depending on the configuration. 
  * `DateTimeType` transforms the original field value into a formatted datetime. 
@@ -221,9 +226,9 @@ $profileExporter = $factory->createExporter('user_profile');
 
 ## Output adapters
 
-When `execute()` is called, the exporter instance iterates the data set one by one, each with the defined column set. As mentioned before, extraction of column values from a record row is the job of the field type (with the help of value resolver). Similarly, the exporter instance does not handle the writing of the extracted values itself. Such job is delegated to an **output adapter**.
+When `execute()` is called, the exporter instance iterates the data set one by one, each with the defined column set. But the exporter instance does not handle the writing of the extracted values itself. Such job is delegated to an **output adapter**.
 
-The following output adapters are supplied in this library:
+You can find the following output adapters in this library:
  * `CSVAdapter`, which uses PHP's own `fputcsv()` function to write data.
  * `GoogleSpreadsheetAdapter`, which uses [asimlqt/php-google-spreadsheet-client](https://github.com/asimlqt/php-google-spreadsheet-client) to write data to Google Spreadsheet.
  * `PHPExcelAdapter`, which utilizes the [PHPExcel](https://github.com/PHPOffice/PHPExcel) library to write data.
@@ -252,7 +257,7 @@ $exporter->setOutputAdapter(new TwigAdapter($twig, [
 Note that the default template located at `Resources/view/exporter/template.html.twig` will be used if no template is given. You can use this file to learn writing your own template.
 
 Hint: You can define your own output adapter services. For example, you can define a service for `TwigAdapter` that uses your own template. After that the above code example can be simplified as follow:
-  
+ 
 ```
 $exporter->setOutputAdapter($this->get('app.exporter.output_adapter.twig'));
 ```
@@ -276,7 +281,7 @@ By default, columns are exported in the order they were added. But you may want 
 $columnSet = $exporter->getColumns();
 $columnSet->getChild('lastName')->setPosition(2);
 ```
-Note that `position` is merely a sorting hint. The library will not modify other columns' positions to prevent clashing. In other words, it is possible for a column set to have columns with nonconsecutive position, or more than one columns with the same position. 
+Note that `position` is merely a sorting hint. The library will not modify other columns' positions for uniqueness. 
 
 Alternatively, you may re-order the columns via `setColumnOrders()`:
 
