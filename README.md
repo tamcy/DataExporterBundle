@@ -1,7 +1,5 @@
 # DataExporterBundle
 
-## About
-
 Data Exporter Bundle for Symfony2.
  
 Assume the following table, which contains 2 user profile objects:
@@ -13,18 +11,23 @@ Assume the following table, which contains 2 user profile objects:
 
 The data structure would look like this in code:
 
-```
+```php
 $items = [
     ['id' => 1, 'firstName' => 'Foo', 'lastName' => 'Chan', 'age' => 20],
     ['id' => 2, 'firstName' => 'Bar', 'lastName' => 'Wong', 'age' => 17],
 ];
 ```
 
-This exporter bundle allows you to export the data set (`$items`) to another format, like CSV or Excel.
+With this bundle you can transform the data set (`$items`) to another format, like CSV:
+```
+Id,FirstName,LastName,Age
+1,Foo,Chan,20
+2,Bar,Wong,17
+```
 
 ## Basic Usage 
 
-Firstly, enable the bundle in `AppKernel.php`:
+First you need to enable the bundle in `AppKernel.php`:
  
 ```php
 $bundles = array(
@@ -322,7 +325,7 @@ foreach ($iterableResult as $row) {
 }
 ```
 
-We can adopt this technique using of PHP's [generator](http://php.net/manual/en/language.generators.overview.php), like so:
+We can adopt this technique using PHP's [generator](http://php.net/manual/en/language.generators.overview.php), like so:
 ```php
 $getDataSetIterator = function()
 {
