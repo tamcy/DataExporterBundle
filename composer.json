@@ -1,6 +1,6 @@
 {
     "name": "sparkson/data-exporter-bundle",
-    "description": "Symfony data exporter bundle",
+    "description": "Data exporter library bundle for Symfony2 framework",
     "keywords": [
         "exporter"
     ],
@@ -9,7 +9,7 @@
     "authors": [
         {
             "name": "Tamcy",
-            "email": "sparksonhk@gmail.com"
+            "email": "tamcyhk@outlook.com"
         }
     ],
     "require": {
@@ -24,7 +24,8 @@
         "google/apiclient": "^1.1"
     },
     "suggest": {
-        "phpoffice/phpexcel": "To use the PHPExcel writer"
+        "phpoffice/phpexcel": "To use the PHPExcel output adapter",
+        "asimlqt/php-google-spreadsheet-client": "To use the Google Spreadsheet output adapter"
     },
     "autoload": {
         "psr-4": {
