@@ -2,8 +2,8 @@ services:
     sparkson.data_exporter.factory:
         class: Sparkson\DataExporterBundle\Exporter\ExporterFactory
         arguments:
-            - @sparkson.data_exporter.type_registry
-            - @sparkson.data_exporter.default_column_resolver
+            - "@sparkson.data_exporter.type_registry"
+            - "@sparkson.data_exporter.default_column_resolver"
 
     sparkson.data_exporter.type_registry:
         class: Sparkson\DataExporterBundle\Exporter\Type\TypeRegistry
